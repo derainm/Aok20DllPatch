@@ -2,476 +2,6 @@
 #include "Hookbase.h"
 
 
-//resize slp interface
-#pragma region resize interface slp
-
-//00457ED0  |. E8 BB7E0000    CALL empires2.0045FD90
-//0045FD90  /$ 56             PUSH ESI
-DWORD u_0045FD90;
-void __declspec(naked)  u_AddWideScreenPanel457ED0()
-{
-	__asm {
-		MOV ECX, DWORD PTR DS : [ECX + 3Ch]
-		SUB ESP, 64h
-		XOR EAX, EAX
-		MOV DWORD PTR SS : [ESP] , 64h
-		MOV DWORD PTR SS : [ESP + 50h] , EAX
-		PUSH ESP
-		PUSH 1000400h
-		PUSH EAX
-		PUSH EAX
-		MOV EDX, DWORD PTR DS : [ECX]
-		PUSH EAX
-		PUSH ECX
-		CALL DWORD PTR DS : [EDX + 014h]
-		ADD ESP, 064h
-		MOV ECX, DWORD PTR DS : [ESI + 020h]
-		JMP[u_0045FD90]
-	}
-}
-//004580A9  |. 8B86 700E0000  MOV EAX,DWORD PTR DS:[ESI+0xE70]
-//004580AF  |. 8BAE 780E0000  MOV EBP,DWORD PTR DS:[ESI+0xE78]
-
-DWORD u_004DB740;
-DWORD u_004580BD;
-//004580A4  |. E8 476F0C00    CALL empires2.0051EFF0
-DWORD u_004580A4;
-DWORD u_004580A9;
-DWORD u_0051EFF0;
-//DWORD _007C08C0;
-DWORD uf_AddWideScreenPanel7C08C0;
-void __declspec(naked)  u_AddWideScreenPanel4580A4()
-{
-	__asm {
-		CALL u_0051EFF0
-		MOV EAX, DWORD PTR DS : [ESI + 0DC0h]
-		MOV ECX, DWORD PTR DS : [ESI + 0EE4h]
-		MOV EDX, DWORD PTR DS : [ESI + 0DC4h]
-		MOV EBP, DWORD PTR DS : [ESI + 0EE8h]
-		ADD EAX, ECX
-		MOV ECX, DWORD PTR DS : [ESI + 01C5Ch]
-		ADD EDX, EBP
-		TEST ECX, ECX
-		JE _005ABBE9
-		JMP[uf_AddWideScreenPanel7C08C0]
-		JE _005ABBD1
-		CMP EBX, 400h
-		JE SHORT _005ABBBC
-		CMP EBX, 0500h
-		JNZ _005ABBE9
-		PUSH 0h
-		ADD EDX, 039Eh
-		PUSH 0h
-		PUSH EDX
-		ADD EAX, 79h
-		JMP[_005ABBDF]
-		_005ABBBC:
-		PUSH 0h
-			ADD EDX, 299h
-			PUSH 0h
-			PUSH EDX
-			MOV EDX, DWORD PTR DS : [ESI + 20h]
-			ADD EAX, 71h
-			PUSH EAX
-			PUSH EDX
-			JMP _005ABBE4//005ABBCF   . EB 13          JMP SHORT age2_x1.005ABBE4// u_004580A4
-			_005ABBD1 :
-		PUSH 0h
-			ADD EDX, 210h
-			PUSH 0h
-			PUSH EDX
-			ADD EAX, 66h
-			_005ABBDF :
-		PUSH EAX
-			MOV EAX, DWORD PTR DS : [ESI + 20h]
-			PUSH EAX
-			_005ABBE4 :
-		CALL u_0051EFF0// u_004DB740
-			_005ABBE9 :
-		JMP[u_004580A9]
-			//MOV EAX, DWORD PTR DS : [ESI + 0E70h]
-			//MOV EBP, DWORD PTR DS : [ESI + 0xE78]
-			//MOV EBX, DWORD PTR DS : [ESI + 0xDC0]
-			//PUSH 0x0
-			Jmp[u_004580A9]//004580A9     8B86 700E0000  MOV EAX,DWORD PTR DS:[ESI+0xE70]
-
-	}
-}
-//MOV EAX,DWORD PTR DS:[0x6645C4]
-//004580A9     8B86 700E0000  MOV EAX,DWORD PTR DS:[ESI+0xE70]
-//004A23E0  /$ 81EC C80C0000  SUB ESP,0xCC8
-DWORD u_6645C4;//7912A0
-//DWORD u_0051EFF0;
-//DWORD u_004580A9;
-DWORD u_004A23E0;
-void __declspec(naked)  u_AddWideScreenPanel7C08C0()
-{
-	__asm {
-		MOV EBX, DWORD PTR DS : [ESI + 0E6Ch]
-		INC EBX
-		IMUL EBX, EBX, 20h
-		MOV EBP, DWORD PTR DS : [ESI + 1C60h]
-		MOV EBP, DWORD PTR SS : [EBP + 0Ch]
-		MOV EBX, DWORD PTR DS : [EBX + EBP + 14h]
-		CMP EBX, 300h
-		JL SHORT _007C0911
-		CMP EBX, 400h
-		JL SHORT _007C08FC
-		PUSH 0h
-		ADD EDX, 39Eh
-		PUSH 0h
-		PUSH EDX
-		ADD EAX, 79h
-		PUSH EAX
-		MOV EAX, DWORD PTR DS : [ESI + 20h]
-		PUSH EAX
-		JMP[_007C0924]
-		_007C08FC :
-		PUSH 0h
-		ADD EDX, 299h
-		PUSH 0h
-		PUSH EDX
-		MOV EDX, DWORD PTR DS : [ESI + 20h]
-		ADD EAX, 71h
-		PUSH EAX
-		PUSH EDX
-		JMP[_007C0924]
-		_007C0911 :
-		PUSH 0h
-		ADD EDX, 210h
-		PUSH 0h
-		PUSH EDX
-		ADD EAX, 66h
-		PUSH EAX
-		MOV EAX, DWORD PTR DS : [ESI + 20h]
-		PUSH EAX
-		_007C0924 :
-		CALL u_0051EFF0
-			JMP u_004580A9
-	}
-}
-//004E1C38   . 8B56 20        MOV EDX,DWORD PTR DS:[ESI+0x20]
-//004E1C45   . 68 AC446500    PUSH empires2.006544AC                   ;  ASCII "scr_game::draw3"
-DWORD u_005223C2;//004E1C45
-
-void __declspec(naked)  u_AddWideScreenPanel004E1C38()
-{
-	__asm {
-		MOV EAX, DWORD PTR DS : [ESI + 14h]
-		PUSH 0h
-		PUSH 2h
-		SUB EAX, 500h
-		SHR EAX, 1
-		LEA EDX, DWORD PTR DS : [EAX + 2ACh]
-		MOV EAX, DWORD PTR DS : [ESI + 18h]
-		LEA EAX, DWORD PTR DS : [EAX - 2Ah]
-		PUSH EAX
-		PUSH EDX
-		MOV EDX, DWORD PTR DS : [ESI + 20h]
-		PUSH EDX
-		PUSH u_005223C2//004E1C45
-		JMP u_0051EFF0//age2_x1.004DB740
-
-
-	}
-}
-//004E1C0E
-DWORD u_007C1C78;
-DWORD u_007C1D90;
-void __declspec(naked)  u_AddWideScreenPanel004E1C0E()
-{
-	__asm {
-		PUSH ESI
-		PUSH EDI
-		PUSH EBX
-		PUSH EBP
-		SUB ESP, 8h
-		MOV EDI, DWORD PTR DS : [ESI + 20h]
-		MOV ECX, DWORD PTR DS : [ESI + 100Ch]
-		MOV EDX, DWORD PTR DS : [EDI + 0C0h]
-		MOV EBX, DWORD PTR DS : [EDI + 0D0h]
-		MOV DWORD PTR DS : [774000h] , EDX //00774000  =795000
-		MOV EAX, DWORD PTR DS : [EBX + 3Ch]
-		MOV EDX, DWORD PTR DS : [EBX + 40h]
-		MOV DWORD PTR DS : [774004h] , EAX
-		MOV DWORD PTR DS : [774008h] , EDX
-		MOV EDI, DWORD PTR DS : [ESI + 14h]
-		MOV EBX, DWORD PTR DS : [ESI + 18]
-		MOV EBP, DWORD PTR DS : [ECX + 0Ch]
-		LEA EAX, DWORD PTR DS : [EBX - 1h]
-		LEA EDX, DWORD PTR DS : [EDI - 1h]
-		MOV DWORD PTR DS : [774080h] , 0h
-		MOV DWORD PTR DS : [774084h] , EAX
-		MOV DWORD PTR DS : [774088h] , 0h
-		MOV DWORD PTR DS : [77408Ch] , EDX
-		MOV DWORD PTR DS : [774038h] , 0h
-		CMP EDI, 320h
-		JE  _007C1C35
-		CMP EDI, 400h
-		JNZ  _u_007C1C78
-		CMP EBX, 300h
-		JL  _u_007C1C78
-		_007C1C35 :
-		MOV EDX, DWORD PTR SS : [EBP + 24h]
-			MOV EAX, DWORD PTR SS : [EBP + 20h]
-			PUSH 0h
-			PUSH EDX
-			PUSH EAX
-			MOV EDX, DWORD PTR SS : [EBP + 30h]
-			PUSH 19h
-			PUSH EDX
-			PUSH 0h
-			PUSH 0h
-			PUSH EBP
-			CALL u_007C1D90
-			MOV EDX, DWORD PTR SS : [EBP + 34h]
-			MOV EAX, EBX
-			MOV DWORD PTR DS : [774038h] , 1C7h
-			SUB EAX, EDX
-			MOV DWORD PTR SS : [ESP + 10h] , EDX
-			MOV DWORD PTR SS : [ESP + 8h] , EAX
-			CALL u_007C1D90
-			ADD ESP, 28h
-			POP EBP
-			POP EBX
-			POP EDI
-			POP ESI
-			RETN
-			_u_007C1C78 :
-		JMP[u_007C1C78]
-	}
-}
-
-//00774000  =795000
-void __declspec(naked)  u_AddWideScreenPanel007C1C78()
-{
-	__asm {
-			MOV ESI, EDI
-			MOV ECX, DWORD PTR SS : [EBP + 24h]
-			MOV EAX, DWORD PTR SS : [EBP + 20h]
-			MOV EDX, DWORD PTR SS : [EBP + 30h]
-			PUSH 0h
-			PUSH ECX
-			PUSH EAX
-			PUSH 19h
-			PUSH EDX
-			PUSH 0h
-			PUSH ESI
-			PUSH EBP
-			CMP EDX, 400h
-			JE _007C1CA8
-			CMP EDX, 500h
-			JE _007C1CB2
-			MOV DWORD PTR SS : [ESP + 20h] , 0D6h
-			JMP _007C1CC2
-			_007C1CA8 :
-			MOV DWORD PTR SS : [ESP + 20h] , 116h
-			JMP _007C1CC2
-			_007C1CB2 :
-			MOV DWORD PTR SS : [ESP + 10h] , 20h
-			MOV DWORD PTR SS : [ESP + 20h] , 158h
-			_007C1CC2 :
-			SUB ESI, EDX
-			AND ESI, ESI
-			JL _007C1D7C
-			_007C1CCC :
-			MOV DWORD PTR SS : [ESP + 4h] , ESI
-			CALL u_007C1D90
-			MOV DWORD PTR DS : [774038h] , 0h
-			MOV EDX, DWORD PTR SS : [EBP + 30h]
-			SUB ESI, EDX
-			ADD ESI, 190h
-			AND ESI, ESI
-			JG _007C1CCC
-			MOV DWORD PTR SS : [ESP + 4h] , 0h
-			CALL u_007C1D90
-			MOV EDX, DWORD PTR SS : [EBP + 30h]
-			MOV EAX, EDI
-			SUB EAX, EDX
-			SHR EAX, 1h
-			SUB EAX, EDX
-			MOV ESI, EAX
-			MOV EAX, EBX
-			LEA EBX, DWORD PTR DS : [EDX + ESI]
-			MOV EDX, DWORD PTR SS : [EBP + 34h]
-			SUB EAX, EDX
-			MOV DWORD PTR SS : [ESP + 10h] , EDX
-			MOV DWORD PTR SS : [ESP + 8h] , EAX
-			MOV DWORD PTR SS : [ESP + 1Ch] , 0h
-			MOV DWORD PTR DS : [774038h] , 1C7h
-			MOV DWORD PTR SS : [ESP + 4h] , EBX
-			CALL u_007C1D90
-			MOV EDX, DWORD PTR SS : [EBP + 30h]
-			ADD EBX, EDX
-			_007C1D3A :
-			MOV DWORD PTR SS : [ESP + 1Ch] , 2h
-			MOV DWORD PTR DS : [774038h] , 1C7h
-			MOV DWORD PTR SS : [ESP + 4h] , ESI
-			CALL u_007C1D90
-			MOV DWORD PTR SS : [ESP + 1Ch] , 0h
-			MOV DWORD PTR DS : [774038h] , 1C7h
-			MOV DWORD PTR SS : [ESP + 4h] , EBX
-			CALL u_007C1D90
-			MOV EAX, DWORD PTR SS : [ESP + 20h]
-			SUB ESI, EAX
-			ADD EBX, EAX
-			CMP EBX, EDI
-			JL _007C1D3A
-			_007C1D7C :
-			ADD ESP, 28h
-			POP EBP
-			POP EBX
-			POP EDI
-			POP ESI
-			RETN
-	}
-}
-//007C1D90
-//00619BC0   55               PUSH EBP
-DWORD u_00619BC0;
-DWORD u_00619C48;
-void __declspec(naked)  u_AddWideScreenPanel007C1D90()
-{
-	__asm {
-		PUSH EBP
-		MOV EBP, ESP
-		PUSH EBX
-		PUSH ESI
-		PUSH EDI
-		XOR EDX, EDX
-		MOV ECX, DWORD PTR SS : [EBP + 0Ch]
-		MOV EAX, DWORD PTR SS : [EBP + 14h]
-		MOV DWORD PTR DS : [774024h] , ECX
-		LEA ECX, DWORD PTR DS : [EAX + ECX - 1h]
-		MOV DWORD PTR DS : [774028h] , ECX
-		//JMP [u_00619BC0]
-		JMP[u_00619C48]
-	}
-}
-//clean purple 
-//0x51a3b7
-//004DA6E7  |. 8B46 14        MOV EAX,DWORD PTR DS:[ESI+0x14]
-DWORD u_Cord_X;
-DWORD u_Cord_Y;
-DWORD u_004DA6EA;
-DWORD u_4DA6CC;
-//004DA6E7     8B46 14        MOV EAX, DWORD PTR DS : [ESI + 0x14]
-//004DA6EA | . 3D 00050000    CMP EAX, 0x500
-//004DA6EF | . 0F85 4C030000  JNZ empires2.004DAA41
-
-
-void __declspec(naked)  u_AddWideScreenPanelreadXY()
-{
-	__asm {
-		JNZ _u_4DA6CC
-		MOV EAX, DWORD PTR DS : [ESI + 18h]//Y            
-		MOV u_Cord_Y, EAX
-		MOV EAX, DWORD PTR DS : [ESI + 14h]//X
-		MOV u_Cord_X, EAX
-		//CMP EAX, 0x500
-		JMP u_004DA6EA
-		_u_4DA6CC :
-		JMP  u_4DA6CC
-	};
-}
-
-__declspec(naked) int __stdcall u_getWindowX()
-{
-	__asm
-	{
-		MOV EAX, DWORD PTR DS : [u_Cord_X]
-		ret
-	}
-}
-//
-__declspec(naked) int __stdcall u_getWindowY()
-{
-	__asm
-	{
-		mov     eax, DWORD PTR DS : [u_Cord_Y]
-		ret
-	}
-}
-
-
-
-char umap1280[] = "map1280.bmp";
-char umap1024[] = "map1024.bmp";
-char umap800[] = "map800.bmp";
-DWORD u_00443B50;
-DWORD uu_005A6870;
-DWORD u_004AF4D0;
-DWORD u_004DB0EA;
-
-//004E1C09   . 8B46 20        MOV EAX,DWORD PTR DS:[ESI+0x20]
-
-//00774000  =795000
-
-void __declspec(naked)  u_AddWideScreenPanelSLP()
-{
-	__asm {
-		PUSH ESI
-		PUSH EDI
-		PUSH EBX
-		PUSH EBP
-		SUB ESP, 8h
-		MOV EDI, DWORD PTR DS : [ESI + 20h]
-		MOV ECX, DWORD PTR DS : [ESI + 1008h]
-		MOV EDX, DWORD PTR DS : [EDI + 0C0h]
-		MOV EBX, DWORD PTR DS : [EDI + 0D0h]
-		MOV DWORD PTR DS : [774000h] , EDX
-		MOV EAX, DWORD PTR DS : [EBX + 3Ch]
-		MOV EDX, DWORD PTR DS : [EBX + 40h]
-		MOV DWORD PTR DS : [774004h] , EAX
-		MOV DWORD PTR DS : [774008h] , EDX
-		MOV EDI, DWORD PTR DS : [ESI + 14h]
-		MOV EBX, DWORD PTR DS : [ESI + 18h]
-		MOV EBP, DWORD PTR DS : [ECX + 0Ch]
-		LEA EAX, DWORD PTR DS : [EBX - 1h]
-		LEA EDX, DWORD PTR DS : [EDI - 1h]
-		MOV DWORD PTR DS : [774080h] , 0h
-		MOV DWORD PTR DS : [774084h] , EAX
-		MOV DWORD PTR DS : [774088h] , 0h
-		MOV DWORD PTR DS : [77408Ch] , EDX
-		MOV DWORD PTR DS : [774038h] , 0h
-		CMP EDI, 320h
-		JE _007C1C35
-		CMP EDI, 400h
-		JNZ __007C1C78
-		CMP EBX, 300h
-		JL __007C1C78
-		_007C1C35 :
-		MOV EDX, DWORD PTR SS : [EBP + 24h]
-			MOV EAX, DWORD PTR SS : [EBP + 20h]
-			PUSH 0h
-			PUSH EDX
-			PUSH EAX
-			MOV EDX, DWORD PTR SS : [EBP + 30h]
-			PUSH 19h
-			PUSH EDX
-			PUSH 0h
-			PUSH 0h
-			PUSH EBP
-			CALL u_007C1D90
-			MOV EDX, DWORD PTR SS : [EBP + 34h]
-			MOV EAX, EBX
-			MOV DWORD PTR DS : [774038h] , 1C7h
-			SUB EAX, EDX
-			MOV DWORD PTR SS : [ESP + 10h] , EDX
-			MOV DWORD PTR SS : [ESP + 8h] , EAX
-			CALL u_007C1D90
-			ADD ESP, 28h
-			POP EBP
-			POP EBX
-			POP EDI
-			POP ESI
-			RETN
-			__007C1C78 :
-		JMP  u_007C1C78
-	}
-}
-#pragma endregion resize interface slp
-
 ///resize  screen 
 #pragma region resize  screen 
 ////00448551  |. 8B6C24 4C      MOV EBP,DWORD PTR SS:[ESP+0x4C]
@@ -1178,7 +708,7 @@ void __declspec(naked) u_UnitFormationPrinteInWideScreen()
 
 // V = Y
 // H = X
-void patchEXE(int V, int H)
+void patchEXE( int H, int V)
 {
 
 	//unit formation button print
@@ -1239,14 +769,18 @@ void patchEXE(int V, int H)
 
 	if (V >= 1024)
 	{
-		writeDwordF(0x00DAA84, V - 250);
-		writeByte(0x04DAA8F, 0x20);
+		//writeDwordF(0x00DAA84, V - 250);
+		writeDwordF(0x00DAA84, V - 200);
+		//writeByte(0x04DAA8F, 0x20);
+		writeByte(0x04DAA8F, 0x19);
 		//precY = 1024;
 	}
 	else if (V >= 768 && V < 1024)
 	{
+		//writeDwordF(0x00DAA84, V - 200);
 		writeDwordF(0x00DAA84, V - 200);
-		writeByte(0x04DAA8F, 0x19);
+		//writeByte(0x04DAA8F, 0x19);
+		writeByte(0x04DAA8F, 0x18);
 		//precY = 768;
 	}
 	else if (V >= 600 && V < 768)
@@ -1303,8 +837,8 @@ void patchEXE(int V, int H)
 		writeDwordF(0x00DAABD, V - 169);
 		writeDwordF(0x00DAAC4, H - 336);
 	}*/
-	writeDwordF(0x00DAABD, V - 169);
-	writeDwordF(0x00DAAC4, H - 336);
+	//writeDwordF(0x00DAABD, V - 169);
+	//writeDwordF(0x00DAAC4, H - 336);
 
 
 
@@ -1348,9 +882,9 @@ void patchEXE(int V, int H)
 
 
 	//selection
-
+	writeDwordF(0x00DAB20, V - 152);
 	int ratioSH = 0;
-	if (V >= 1024)
+	/*if (V >= 1024)
 	{
 		//ratioSH = -(H - 1024 / 2) / 2 - 1024 / 2 - 50;
 		//x
@@ -1361,7 +895,7 @@ void patchEXE(int V, int H)
 		//ratioSH = -(H - 800) / 2 - 800 / 2 - 230;
 		//x
 		writeDwordF(0x00DAB20, V - 152);
-	}
+	}*/
 	//else if (V < 768 && V >= 600)
 	//{
 	//	ratioSH = -(H - 800) / 2 - 800 / 2 ;
@@ -1369,7 +903,7 @@ void patchEXE(int V, int H)
 	//	writeDwordF(0x00DAB20, V + ratioV - 152);
 	//}
 
-	writeDwordF(0x0DAB27, H - 230);//
+	//writeDwordF(0x0DAB27, H - 230);//
 	int ratioSHeight = 0;
 
 	//else if (V < 768 && V >= 600)
@@ -1377,9 +911,13 @@ void patchEXE(int V, int H)
 	//	ratioSHeight = (800) / 2;
 	//}
 	//size of army selection
-	writeDwordF(0x00DAB1B, ratioSHeight);
-
-
+	//writeDwordF(0x00DAB1B, ratioSHeight);
+	//writeDwordF(0x00DAB1B, H - 649);
+	writeDwordF(0x00DAABD, V - 169);
+	writeDwordF(0x00DAAC4, H - 336);
+	writeDwordF(0x00DAB1B, H - 649);
+	writeDwordF(0x00DAB20, V - 152);
+	writeDwordF(0x00DAB2F, V - 144);
 	//diplomatie button
 	writeDwordF(0x00DAC6E, H - 303);
 	writeDwordF(0x00DAC84, H - 243);
@@ -1465,6 +1003,7 @@ void patchEXE(int V, int H)
 }
 DWORD u_7A5500 ;
 DWORD uu_00632C48= 0x0632C48;
+DWORD uu_00619C48 = 0x0619C48;
 void __declspec(naked) u_UserPatchResolution007C1EF0()
 {
 	__asm {
@@ -1480,7 +1019,7 @@ void __declspec(naked) u_UserPatchResolution007C1EF0()
 		LEA ECX, DWORD PTR DS : [EAX + ECX - 1h]
 		MOV DWORD PTR DS : [774028h] , ECX
 		//JMP [uu_00632C48]
-		JMP[u_00619C48]
+		JMP[uu_00619C48]
 	}
 }
 
@@ -1509,9 +1048,28 @@ void __declspec(naked) u_UserPatchResolution007C1F20()
 		LEA ECX, DWORD PTR DS : [EAX + ECX - 1h]
 		MOV DWORD PTR DS : [774028h] , ECX
 		//JMP [uu_00632C48]
-		JMP[u_00619C48]
+		JMP[uu_00619C48]
 	}
 }
+void __declspec(naked)  uu_AddWideScreenPanel007C1D90()
+{
+	__asm {
+		PUSH EBP
+		MOV EBP, ESP
+		PUSH EBX
+		PUSH ESI
+		PUSH EDI
+		XOR EDX, EDX
+		MOV ECX, DWORD PTR SS : [EBP + 0Ch]
+		MOV EAX, DWORD PTR SS : [EBP + 14h]
+		MOV DWORD PTR DS : [774024h] , ECX
+		LEA ECX, DWORD PTR DS : [EAX + ECX - 1h]
+		MOV DWORD PTR DS : [774028h] , ECX
+		//JMP [u_00619BC0]
+		JMP[uu_00619C48]
+	}
+}
+DWORD uu_007C1D90 = (DWORD)uu_AddWideScreenPanel007C1D90;
 //__declspec(naked) void resources_changed_hook(short int res_type, float usage_type, int unused) {
 //	__asm {
 //		pushad
@@ -1530,25 +1088,121 @@ void __declspec(naked) u_UserPatchResolution007C1F20()
 //		jmp resources_changed
 //	}
 //}
-void __declspec(naked) u_UserPatchResolution_006139B4()//heap free
+//007C1CD2   E8 DD1CE5FF      CALL age2_x1.006139B4
+//we need this to alloc picture
+//00607A94 | > 8325 8C2A7700 > AND DWORD PTR DS : [772A8C] , 0
+//00607A9B | . 8325 902A7700 > AND DWORD PTR DS : [772A90] , 0
+//
+
+void __declspec(naked) u_UserPatchResolution_006178C8()//heap free
 {
 	__asm {
-
+			//MOV EAX,DWORD PTR DS:[793144]
+		    MOV EAX, DWORD PTR DS : [772A90h] 
+			LEA ECX,DWORD PTR DS:[EAX+EAX*4h]
+			//MOV EAX,DWORD PTR DS:[793148]
+			MOV EAX,DWORD PTR DS:[772A94h]
+			LEA ECX,DWORD PTR DS:[EAX+ECX*4h]
+			_006178D8:
+			CMP EAX,ECX
+			JNB short _006178F0
+			MOV EDX,DWORD PTR SS:[ESP+4h]
+			SUB EDX,DWORD PTR DS:[EAX+0Ch]
+			CMP EDX,100000h
+			JB short _006178F2
+			ADD EAX,14
+			JMP short _006178D8
+			_006178F0:
+			XOR EAX,EAX
+			_006178F2:
+			RETN
 	}
 }
+
+
+
+
+//564A2BF7   50               PUSH EAX
+//564A2BF8   6A 00            PUSH 0
+//564A2BFA   A3 58564A56      MOV DWORD PTR DS : [test] , EAX
+//564A2BFF   FF15 18404A56    CALL DWORD PTR DS : [<&KERNEL32.GetProcessHeap>] ; KERNEL32.GetProcessHeap
+//564A2C05   50               PUSH EAX
+//564A2C06   FF15 10404A56    CALL DWORD PTR DS : [<&KERNEL32.HeapFree>] ; KERNEL32.HeapFree
+//
+
+//without GetProcessHeap
+//564A2BF7   50               PUSH EAX
+//564A2BF8   6A 00            PUSH 0
+//564A2BFA   FF35 BC564A56    PUSH DWORD PTR DS : [han] //HANDLE
+//564A2C00 > A3 58564A56      MOV DWORD PTR DS : [test] , EAX
+//564A2C05   FF15 10404A56    CALL DWORD PTR DS : [<&KERNEL32.HeapFree>] ; KERNEL32.HeapFree
+
+//DWORD hHeap =0x772A98;
+//DWORD _006178C8 = (DWORD)u_UserPatchResolution_006178C8;
+////PUSH DWORD PTR DS : [772A98] ; / hHeap = NULL
+//void __declspec(naked) u_UserPatchResolution_006139B4()//heap free
+//{
+//	__asm {
+//		PUSH ESI
+//		MOV ESI, DWORD PTR SS : [ESP + 8h]
+//		TEST ESI, ESI
+//		JE short _006139E1
+//		PUSH ESI
+//		CALL _006178C8
+//		POP ECX
+//		TEST EAX, EAX
+//		PUSH ESI
+//		JE SHORT age2_x1.006139D3
+//		PUSH EAX
+//		CALL age2_x1.006178F3
+//		POP ECX
+//		POP ECX
+//		POP ESI
+//		RETN
+//	}
+//	HeapFree(han, 0, test);
+//	__asm
+//	{
+//	_006139E1:
+//	POP ESI
+//	RETN
+//
+//
+//		/*
+//
+//		   PUSH 0; | Flags = 0
+//		   PUSH DWORD PTR DS : [79314C] ; | hHeap = NULL
+//		   CALL DWORD PTR DS : [<&KERNEL32.HeapFree>] ; \HeapFree
+//		   POP ESI
+//		   RETN
+//*/
+//
+//	}
+//	HeapFree(han, 0, test);
+//}
 void __declspec(naked) u_UserPatchResolution_006137C9()//heap alloc
 {
 	__asm {
 
 	}
 }
+//006139B4  /$ 56             PUSH ESI
+//0058FA7E  |. E8 2D960600    |CALL Empires2.005F90B0
+
+//0058F2A0  |. E8 4B9D0600    CALL Empires2.005F8FF0
+//00401210  |. E8 B4252100    CALL age2_x1.006137C9
+
+
+
+//006139B4   ==  0058FA7E
 
 //to heap alloc 24444
-DWORD uu_006139B4 = (DWORD)u_UserPatchResolution_006139B4;
-DWORD uu_006137C9 = 0x06137C9;
+DWORD uu_006139B4 = 0x058FA7E;//(DWORD)u_UserPatchResolution_006139B4;
+DWORD uu_006137C9 = 0x05F8FF0;
 DWORD uu_007C1EF0 = (DWORD)u_UserPatchResolution007C1EF0;
 DWORD uu_007C1F20 = (DWORD)u_UserPatchResolution007C1F20;
-//DWORD* test ;
+DWORD* test ;
+HANDLE  han ;
 DWORD _005F8FF0 = 0x05F8FF0;
 DWORD __005FCE14 = 0x05FCE14;
 void __declspec(naked) u_UserPatchResolution07C1C38()
@@ -1601,11 +1255,11 @@ void __declspec(naked) u_UserPatchResolution07C1C38()
 			MOV EAX, DWORD PTR DS : [u_7A5500]
 			TEST EAX, EAX
 			JE short uu_007C1CDA
-			CMP DWORD PTR DS : [EAX + 10] , ESI
+			CMP DWORD PTR DS : [EAX + 10h] , ESI
 			JGE short uu_007C1D0D
 			PUSH EAX
-			//CALL uu_006139B4
-			CALL __005FCE14
+			CALL uu_006139B4
+			//CALL __005FCE14
 			ADD ESP, 4h
 			uu_007C1CDA :
 			SHL ESI, 2h
@@ -1643,7 +1297,7 @@ void __declspec(naked) u_UserPatchResolution07C1C38()
 			LEA ESI, DWORD PTR DS : [ECX + EDX * 4h - 1B8h]
 			CMP DWORD PTR DS : [ESI] , 0h
 			JNZ short uu_007C1D56
-			ADD ESI, 78
+			ADD ESI, 78h
 			CMP DWORD PTR DS : [ESI] , 0h
 			JNZ short uu_007C1D56
 			ADD ESI, 78h
@@ -1763,7 +1417,14 @@ void __declspec(naked) u_UserPatchResolution07C1C38()
 			RETN
 	}
 	//test = (DWORD*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(DWORD));
+	//HeapFree(han, 0, test);
 }
+//7A362BE6   6A 04            PUSH 4
+//7A362BE8   6A 08            PUSH 8
+//7A362BEA   FF15 1440367A    CALL DWORD PTR DS : [<&KERNEL32.GetProcessHeap>] ; KERNEL32.GetProcessHeap
+//7A362BF0   50               PUSH EAX
+//7A362BF1   FF15 1040367A    CALL DWORD PTR DS : [<&KERNEL32.HeapAlloc>] ; ntdll.RtlAllocateHeap
+
 
 DWORD u_007C1C38 = (DWORD)u_UserPatchResolution07C1C38;
 
@@ -1776,7 +1437,8 @@ void __declspec(naked) u_UserPatchResolution007C1B70()
 			PUSH EBP
 			SUB ESP, 30h
 			MOV EDI, DWORD PTR DS : [ESI + 20h]
-			MOV ECX, DWORD PTR DS : [ESI + 100Ch]
+			MOV ECX, DWORD PTR DS : [ESI + 1008h]
+			//MOV ECX, DWORD PTR DS : [ESI + 100Ch]
 			MOV EDX, DWORD PTR DS : [EDI + 0C0h]
 			MOV EBX, DWORD PTR DS : [EDI + 0D0h]
 			MOV DWORD PTR DS : [774000h] , EDX //00774000  =795000
@@ -1785,7 +1447,7 @@ void __declspec(naked) u_UserPatchResolution007C1B70()
 			MOV DWORD PTR DS : [774004h] , EAX
 			MOV DWORD PTR DS : [774008h] , EDX
 			MOV EDI, DWORD PTR DS : [ESI + 14h]
-			MOV EBX, DWORD PTR DS : [ESI + 18]
+			MOV EBX, DWORD PTR DS : [ESI + 18h]
 			MOV EBP, DWORD PTR DS : [ECX + 0Ch]
 			LEA EAX, DWORD PTR DS : [EBX - 1h]
 			LEA EDX, DWORD PTR DS : [EDI - 1h]
@@ -1812,14 +1474,14 @@ void __declspec(naked) u_UserPatchResolution007C1B70()
 			PUSH 0h
 			PUSH 0h
 			PUSH EBP
-			CALL u_007C1D90
+			CALL uu_007C1D90
 			MOV EDX, DWORD PTR SS : [EBP + 34h]
 			MOV EAX, EBX
 			MOV DWORD PTR DS : [774038h] , 1C7h
 			SUB EAX, EDX
 			MOV DWORD PTR SS : [ESP + 10h] , EDX
 			MOV DWORD PTR SS : [ESP + 8h] , EAX
-			CALL u_007C1D90
+			CALL uu_007C1D90
 			ADD ESP, 50h
 			POP EBP
 			POP EBX
@@ -1842,78 +1504,16 @@ DWORD _007C1B70 = (DWORD)u_UserPatchResolution007C1B70;
 void __declspec(naked) u_UserPatchResolution()
 {
 	__asm {
-		push 004E1C20h
+		//push 004E1C20h
 		JMP _007C1B70
 	}
 }
 
 // DWORD * myCord_X, DWORD* myCord_Y
-void UserPatchWideScreen(DWORD* myCord_X, DWORD* myCord_Y)
+void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 {
 
-#pragma region resize interface slp
-	//457ED0
-	u_0045FD90 = 0x045FD90;
-	//0x4580A4
-	u_004580A9 = 0x04580A9;
-	u_004580A4 = 0x04580A4;
-	u_004DB740 = 0x04DB740;
-	u_004580BD = 0x04580BD;
-	u_0051EFF0 = 0x051EFF0;
-	//7C08C0
-	u_6645C4 = 0x06645C4;//7912A0
-	u_0051EFF0 = 0x051EFF0;
-	u_004580A9 = 0x04580A9;
-	u_004A23E0 = 0x004A23E0;
-	//_AddWideScreenPanel7C08C0 = (DWORD) u_AddWideScreenPanel7C08C0;
-	//setHook((void*)0x457ED0, AddWideScreenPanel457ED0);
-	//// call 7C08C0
-	//setHook((void*)0x4580A4, AddWideScreenPanel4580A4);
-	////4E1C38
-	u_005223C2 = 0x04E1C45;
-	//setHook((void*)0x04E1C38, AddWideScreenPanel004E1C38);
 
-	////007C1D90
-	u_007C1C78 = (DWORD)u_AddWideScreenPanel007C1C78;
-	u_00619C48 = 0x0619C48;
-	u_007C1D90 = (DWORD)u_AddWideScreenPanel007C1D90;
-
-	u_00619BC0 = 0x0619BC0;
-	//writeByte(0x41f80A,0x9066);
-	////004E1C0E     90             NOP
-	//setHook((void*)0x04E1C0E, AddWideScreenPanel004E1C0E);
-	////to do ajouter la partie manquante
-	////004E1C12 
-	//writeByte(0x04E1C13, 0x90);
-	//BYTE _04E1C14[] =
-	//{
-	//	0x68,0x20,0x1C,0x4E,0x00
-	//};
-	//writeData(0x04E1C09, _04E1C14, 5);
-	////004E1C2A     8B46 18        MOV EAX,DWORD PTR DS:[ESI+0x18]
-	//writeByte(0x04E1C2C, 0x18);
-	////004E1C2F   . 3D 00050000    CMP EAX,0x500
-	//writeByte(0x04E1C31, 0x04);
-
-
-
-	u_004DA6EA = 0x04DA6EA;
-	u_4DA6CC = 0x04DA6CC;
-	//004DA6E7  |. 8B46 14        MOV EAX,DWORD PTR DS:[ESI+0x14]   -> X 
-	setHook((void*)0x04DA6E5, u_AddWideScreenPanelreadXY);
-
-	//004E1C0E     90             NOP
-	/*setHook((void*)0x04E1C0E, u_AddWideScreenPanelSLP);
-	BYTE u_PUSH_4E1C20[] = { 0x68,0x20,0x1C,0x4E,0x00 };
-	writeData(0x04E1C09, u_PUSH_4E1C20, 5);
-	writeByte(0x04E1C13, 0x90);*/
-
-
-
-
-#pragma endregion resize interface slp
-
-	
 
 	///resize  screen 
 #pragma region resize  screen 
@@ -1982,6 +1582,7 @@ void UserPatchWideScreen(DWORD* myCord_X, DWORD* myCord_Y)
 	writeData(0x04EF429, _83C40C6690, 5);
 	*/
 #pragma endregion resize  screen 
+	/*
 	//Formation button pront X and Y
 	u_004DAB6E = 0x04DAB6E;
 	u_005A6870 = 0x05A6870;
@@ -1989,13 +1590,12 @@ void UserPatchWideScreen(DWORD* myCord_X, DWORD* myCord_Y)
 	//writeDwordF(0x04DAB3A, V + ratioV - 400);//21
 	setHook((void*)0x04DAB3A, u_UnitFormationPrinteInWideScreen);
 	//WideScreen(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-
-
-	*myCord_X = u_Cord_X;
-	*myCord_Y = u_Cord_Y;
+	*/
 
 
 
+
+	
 	//user patch ress
 	setHook((void*)0x04E1C0E  , u_UserPatchResolution);
 	BYTE u_PUSH_4E1C20[] = { 0x68,0x20,0x1C,0x4E,0x00 };
@@ -2004,6 +1604,6 @@ void UserPatchWideScreen(DWORD* myCord_X, DWORD* myCord_Y)
 	//004DF521  |. 7C 2D          JL SHORT empires2.004DF550
 	writeByte(0x04DF521, 0xEB);
 	
-
+	
 	
 }
