@@ -160,6 +160,7 @@
     <ClInclude Include="MiniMapColor.h" />
     <ClInclude Include="NormaleAoeWideScreen.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PortForwarding.h" />
     <ClInclude Include="UserPatchWideScreen.h" />
     <ClInclude Include="windowed.h" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClCompile Include="AddRms.cpp" />
     <ClCompile Include="chatColor.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="PortForwarding.cpp" />
     <ClCompile Include="FixTorpedoCheatCrashBug.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="MiniMapColor.cpp" />

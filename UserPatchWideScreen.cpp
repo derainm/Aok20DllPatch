@@ -750,7 +750,12 @@ void patchEXE( int H, int V)
 		writeDwordF(0x0DA732, H + 1);//1280
 		writeDwordF(0x0050DA3, V + 2);//1200
 	}
-
+	//else if (H == 1280)
+	//{
+	//	writeDwordF(0x0DAA41, H + 0);//1024
+	//	writeDwordF(0x0DAA5D, H + 0);//1024
+	//	writeDwordF(0x0DAA89, H + 0);//1024
+	//}
 	//004DA6EA  |. 3D 00050000                   CMP EAX,500
 	//004DAA41  |> 3D 00050000                   CMP EAX,500
 	//004DAD98 | > 3D 20030000                   CMP EAX, 320
@@ -789,8 +794,8 @@ void patchEXE( int H, int V)
 	{
 		//writeDwordF(0x00DAA84, V - 200);
 		writeDwordF(0x00DAA84, V - 200);
-		//writeByte(0x04DAA8F, 0x19);
-		writeByte(0x04DAA8F, 0x18);
+		writeByte(0x04DAA8F, 0x19);
+		//writeByte(0x04DAA8F, 0x18);
 		//precY = 768;
 	}
 	else if (V >= 600 && V < 768)
