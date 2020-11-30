@@ -10,6 +10,8 @@
 #include "AddRms.h"
 #include "NormaleAoeWideScreen.h"
 #include "UserPatchWideScreen.h"
+#include <cassert>
+
 using namespace std;
 //resize slp interface
 #pragma region resize interface slp
@@ -362,8 +364,11 @@ void __declspec(naked)  u_AddWideScreenPanel007C1D90()
 //004DA6E7  |. 8B46 14        MOV EAX,DWORD PTR DS:[ESI+0x14]
 DWORD u_Cord_X;
 DWORD u_Cord_Y;
+DWORD _u_Cord_X = GetSystemMetrics(SM_CXSCREEN);
+DWORD _u_Cord_Y = GetSystemMetrics(SM_CYSCREEN);
 DWORD u_004DA6EA;
 DWORD u_4DA6CC;
+DWORD u_screenSaveEDX;
 //004DA6E7     8B46 14        MOV EAX, DWORD PTR DS : [ESI + 0x14]
 //004DA6EA | . 3D 00050000    CMP EAX, 0x500
 //004DA6EF | . 0F85 4C030000  JNZ empires2.004DAA41
@@ -372,17 +377,28 @@ DWORD u_4DA6CC;
 void __declspec(naked)  u_AddWideScreenPanelreadXY()
 {
 	__asm {
+
+
 		JNZ _u_4DA6CC
 		MOV EAX, DWORD PTR DS : [ESI + 18h]//Y            
 		MOV u_Cord_Y, EAX
+		//MOV EAX, _u_Cord_Y
+		//MOV  DWORD PTR DS : [ESI + 18h], EAX
+
 		MOV EAX, DWORD PTR DS : [ESI + 14h]//X
 		MOV u_Cord_X, EAX
+		//MOV EAX, _u_Cord_X
+		//MOV  DWORD PTR DS : [ESI + 14h] , EAX
+		//MOV EAX, DWORD PTR DS : [ESI + 14h]//X
+		//MOV EAX, u_Cord_X//DWORD PTR DS : [ESI + 14h]
 		//CMP EAX, 0x500
 		JMP u_004DA6EA
 		_u_4DA6CC :
 		JMP  u_4DA6CC
 	};
 }
+
+
 
 __declspec(naked) int __stdcall u_getWindowX()
 {
@@ -546,12 +562,74 @@ void getxy()
 
 #pragma endregion resize interface slp
 }
+//0041BCCA  |. 3BC1           CMP EAX,ECX
+
+//
+//bool SetStringValue(HKEY                hRegistryKey,
+//	const std::wstring& valueName,
+//	const std::wstring& data)
+//{
+//	assert(hRegistryKey != nullptr);
+//
+//	return  == ERROR_SUCCESS);
+//}
+
+//004D9984 | . 8B4E 18                       MOV ECX, DWORD PTR DS : [ESI + 18]
+//004D9987 | . 8B56 14                       MOV EDX, DWORD PTR DS : [ESI + 14]
+
+
+DWORD _004D998C = 0x04D998C;
+DWORD _Res__X = (DWORD) GetSystemMetrics(SM_CXSCREEN);
+DWORD _Res__Y = (DWORD) GetSystemMetrics(SM_CYSCREEN);
+//0041BCC5     B9 00040000                  MOV ECX, 400
+
+DWORD _0041BD2B = 0x041BD2B;
+DWORD _getscreenEax = 0x041BD2B;
+void __declspec(naked)  setScreenRes()
+{
+	__asm {
+	/*	MOV ECX, _Res__Y
+		MOV EDX, _Res__X
+		MOV EDX, DWORD PTR DS : [6645C4]
+		MOV EAX, DWORD PTR DS : [EDX + 24]
+		MOV EAX, DWORD PTR DS : [EAX + 8F4]
+		CMP EAX, 320*/
+
+		//MOV ECX, _u_Cord_X
+		//MOV EDX, _u_Cord_Y
+		//MOV u_screenSaveEDX, EDX
+		//MOV EDX, DWORD PTR DS : [6645C4h]
+		//MOV EAX, DWORD PTR DS : [EDX + 24h]
+		//MOV EDX, _u_Cord_X
+		//MOV  DWORD PTR DS : [EAX + 8F4h] , EDX
+		//MOV EAX, _u_Cord_Y
+		//MOV  DWORD PTR DS : [EAX + 8F8h] , EDX
+
+
+		MOV EAX, DWORD PTR DS : [EBX + 24h]
+		MOV ECX, _Res__X
+		MOV DWORD PTR DS : [EAX + 8F4h] , ECX // 320h
+		MOV ECX, DWORD PTR DS : [EBX + 24h]
+		MOV _getscreenEax,EAX
+		MOV EAX, _Res__Y
+		MOV DWORD PTR DS : [ECX + 8FCh] , EAX//258
+		MOV  _Res__Y, EAX
+		JMP _0041BD2B
+
+
+
+	}
+}
+int preX = 800;
+int PreY = 600;
+int ppreX = 1024;
+int pPreY = 768;
 DWORD myCord_X;
 DWORD myCord_Y;
 
 CRITICAL_SECTION cs_Cord_X;
 CRITICAL_SECTION cs_Cord_Y;
-
+HKEY hKey  ;
 DWORD WINAPI MainThread(LPVOID param) {
 	LoadLibraryA("wndmode.dll");
 	windowedMod();
@@ -562,75 +640,43 @@ DWORD WINAPI MainThread(LPVOID param) {
 	miniMapColor();
 	AddNewBittonFormation();
 	AddRms();
-	InitializeCriticalSection(&cs_Cord_X);
-	InitializeCriticalSection(&cs_Cord_Y);
+	//InitializeCriticalSection(&cs_Cord_X);
+	//InitializeCriticalSection(&cs_Cord_Y);
 
 
+	setHook((void*)0x041BCC5, setScreenRes);
 	getxy();
+	
 
-	//let the process live until close
-	//while (true) {
-
-	//}
-	int precY = 0;
-	int precX = 0;
+	
 	int V = 0;
 	int H = 0;
 
+	int cpt = 0;
+
+
 	while (true) {
-		//if (GetAsyncKeyState(VK_ESCAPE)) break;
-		//Sleep(50);
 
 
-		//int V = (int)Cord_Y;
-		//int H = (int)Cord_X;
-
-		//HKEY_CURRENT_USER\Software\Microsoft\Microsoft Games\Age of Empires\2.0
-		//if (GetAsyncKeyState(VK_ESCAPE)) break;
-		//Sleep(50);
-
-		int cpt = 0;
-
-
-
-		//start with full resolution
-		//0041BCE1     C780 F4080000 >MOV DWORD PTR DS:[EAX+0x8F4],0x780
-		//0041BCEE     C781 FC080000 >MOV DWORD PTR DS:[ECX+0x8FC],0x438
-		writeDwordF(0x01BCE7 -1,H);//  1024      1024    set
-		writeDwordF(0x01BCF4 -1, V);//   768       768    set
-
-		EnterCriticalSection(&cs_Cord_Y);
+		//EnterCriticalSection(&cs_Cord_Y);
 		V = (int)u_Cord_Y;
-		LeaveCriticalSection(&cs_Cord_Y);
-		EnterCriticalSection(&cs_Cord_X);
+		//LeaveCriticalSection(&cs_Cord_Y);
+		//EnterCriticalSection(&cs_Cord_X);
 		H = (int)u_Cord_X;
-		EnterCriticalSection(&cs_Cord_X);
+		//EnterCriticalSection(&cs_Cord_X);
 
-		if ((V == 0 && H == 0) && (V == 600 && H == 800))
+
+		if ((preX == H && PreY == V)|| (ppreX == H && pPreY == V))
 		{
-			u_Cord_Y = GetSystemMetrics(SM_CYSCREEN);
-			u_Cord_X = GetSystemMetrics(SM_CXSCREEN);
+			//u_Cord_Y = GetSystemMetrics(SM_CYSCREEN);
+			//u_Cord_X = GetSystemMetrics(SM_CXSCREEN);
+			writeDwordF(0x01BCE7 - 1, GetSystemMetrics(SM_CXSCREEN));//  1024      1024    set
+			writeDwordF(0x01BCF4 - 1, GetSystemMetrics(SM_CYSCREEN));//   768       768    set
+			patchEXE(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 		}
-		if (V > 0 && H > 0)// && H > 800
-		{
+		else
+			patchEXE(H, V);
 
-
-				patchEXE(H, V);
-
-
-
-			// 1024  -> au chose interface 
-			//1280x600
-			//1280x720
-
-			//WideScreen(H, V);
-
-			//patchEXE(GetSystemMetrics(SM_CYSCREEN), GetSystemMetrics(SM_CXSCREEN));
-			//patchEXE(H, V);
-
-
-
-		}
 	}
 	FreeLibraryAndExitThread((HMODULE)param, 0);
 

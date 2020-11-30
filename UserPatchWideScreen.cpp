@@ -710,7 +710,10 @@ void __declspec(naked) u_UnitFormationPrinteInWideScreen()
 // H = X
 void patchEXE( int H, int V)
 {
-
+	//writeDwordF(0x001D354, H + 0);//1024
+	//writeDwordF(0x001D369, V + 0);//768
+	//writeDwordF(0x01BCE7 - 1, H);//  1024      1024    set
+	//writeDwordF(0x01BCF4 - 1, V);//   768       768    set
 	//unit formation button print
 	if (V >= 1024)
 	{
@@ -736,6 +739,7 @@ void patchEXE( int H, int V)
 	}
 	if (H == 1024)
 	{
+		
 		writeDwordF(0x0DAA41, H + 0);//1024
 		writeDwordF(0x0DAA5D, H + 0);//1024
 		writeDwordF(0x0DAA89, H + 0);//1024
@@ -747,17 +751,23 @@ void patchEXE( int H, int V)
 		writeDwordF(0x0050DA3, V + 2);//1200
 	}
 
+	//004DA6EA  |. 3D 00050000                   CMP EAX,500
+	//004DAA41  |> 3D 00050000                   CMP EAX,500
+	//004DAD98 | > 3D 20030000                   CMP EAX, 320
+
+
+
 
 
 	if (H > 1280)
 	{
 
-		writeDwordF(0x0DA6EA, H + 1);//1280
+		//writeDwordF(0x0DA6EA, H + 1);//1280
 		writeDwordF(0x0DA706, H + 1);//1280
 		writeDwordF(0x0DA732, H + 1);//1280
 		writeDwordF(0x0DA732, H + 1);//1280
 
-	}
+	}	
 
 	if (V > 1200)
 		writeDwordF(0x0050DA3, V + 2);//1200
