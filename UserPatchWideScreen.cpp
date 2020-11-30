@@ -1007,8 +1007,111 @@ void patchEXE( int H, int V)
 	writeDwordF(0x00E494A, V - 54);
 
 
+	/*
+	writeDwordF(0x00DA766, V - 206);
+	writeDwordF(0x00DA7C9, V - 196);
+	writeDwordF(0x00DA7D8, V - 178);
+	writeDwordF(0x00DA80F, V - 55);
+	writeDwordF(0x00DA917, H - 301);
+	writeDwordF(0x00DA92D, H - 241);
+	writeDwordF(0x00DA943, H - 181);
+	writeDwordF(0x00DA959, H - 121);
+	writeDwordF(0x00DA96F, H - 62);
+	writeDwordF(0x00DA981, V - 194);
+	writeDwordF(0x00DA99A, V - 67);
+	writeDwordF(0x00DA9B3, V - 197);
+	writeDwordF(0x00DA9CC, V - 197);
+	writeDwordF(0x00DA9E5, V - 167);
+	writeDwordF(0x00DA9FE, V - 77);
+	writeDwordF(0x00DAA17, V - 48);
+	writeDwordF(0x00DAA30, V - 44);
+	writeDwordF(0x00DAA41, H + 0);//1024
+	writeDwordF(0x00DAA5D, H + 0);//1024
+	writeDwordF(0x00DAA72, V - 230);
+	writeDwordF(0x00DAA84, V - 200);
+	writeDwordF(0x00DAA89, H + 0);//1024
+	writeDwordF(0x00DAABD, V - 169);
+	writeDwordF(0x00DAAC4, H - 336);
+	writeDwordF(0x00DAAF2, H / 2 - 112);
+	writeDwordF(0x00DAB1B, H - 649);
+	writeDwordF(0x00DAB20, V - 152);
+	writeDwordF(0x00DAB2F, V - 144);
+	//writeDwordF(0x00DAB67, V - 21);//
+	writeDwordF(0x00DAC6E, H - 303);
+	writeDwordF(0x00DAC84, H - 243);
+	writeDwordF(0x00DAC9A, H - 183);
+	writeDwordF(0x00DACB0, H - 123);
+	writeDwordF(0x00DACC6, H - 64);
+	writeDwordF(0x00DACD8, V - 154);
+	writeDwordF(0x00DACDF, H - 308);
+	writeDwordF(0x00DACF1, V - 49);
+	writeDwordF(0x00DACF8, H - 309);
+	writeDwordF(0x00DAD0A, V - 156);
+	writeDwordF(0x00DAD11, H - 96);
+	writeDwordF(0x00DAD23, V - 162);
+	writeDwordF(0x00DAD2A, H - 69);
+	writeDwordF(0x00DAD3C, V - 137);
+	writeDwordF(0x00DAD43, H - 60);
+	writeDwordF(0x00DAD55, V - 59);
+	writeDwordF(0x00DAD5C, H - 61);
+	writeDwordF(0x00DAD6E, V - 35);
+	writeDwordF(0x00DAD75, H - 74);
+	writeDwordF(0x00DAD87, V - 39);
+	writeDwordF(0x00DAD8E, H - 102);
 
 
+
+
+	writeDwordF(0x001BCC5, H + 0);//1024
+	writeDwordF(0x001BD06, V + 0);//768
+	//writeDwordF(0x001BD12,	H + 1);//1280
+	writeDwordF(0x001D354, H + 0);//1024
+	writeDwordF(0x001D369, V + 0);//768
+	//writeDwordF(0x001D38C,	H + 1);//1280
+	writeDwordF(0x001D94B, H + 0);//1024
+	writeDwordF(0x001D975, V + 0);//768
+	//writeDwordF(0x001D984,	H + 1);//1280
+	writeDwordF(0x004860F, H + 0);//1024
+	//writeDwordF(0x0048616,	H + 1);//1280
+	writeDwordF(0x004865B, H + 0);//1024
+	//writeDwordF(0x004867F,	H + 1);//1280
+	writeDwordF(0x0048F06, H + 0);//1024
+	writeDwordF(0x0048F0B, V + 0);//768
+
+
+
+	//004DF557 | . 8138 04000300  CMP DWORD PTR DS : [EAX] , 30004
+	//	004DF55D | ? 007C2D 33      ADD BYTE PTR SS : [EBP + EBP + 33] , BH
+	//004DF58B  |. EB 2B          JMP SHORT empires2.004DF5B8
+
+
+	*/
+
+	/*
+	writeDwordF(0x00DF4E5+1, H + 2);//1600
+
+
+	writeDwordF(0x00DF4EC+1, V + 2);//1200
+	writeDwordF(0x00DF513+1, H + 1);//1280
+	writeDwordF(0x00DF51A+1, V + 1);//1024
+	writeDwordF(0x00DF550+1, H + 0);//1024
+
+	writeDwordF(0x00DF557+1, V + 0);//768
+	writeDwordF(0x00E1C2F+1, H + 1);//1280
+	writeDwordF(0x00E4719+1, H + 1);//1280
+		*/
+	//record game panel fix size
+	writeDwordF(0x00E4840, H + 0);//1024
+	writeDwordF(0x00ED126, H + 0);//1024
+	writeDwordF(0x00ED14D, H + 1);//1280
+	writeDwordF(0x00EEAC3, H + 0);//1024
+	writeDwordF(0x00EEAC8, V + 0);//768
+	writeDwordF(0x00EEADE, H + 1);//1280
+	writeDwordF(0x00EEAE3, V + 1);//1024
+	writeDwordF(0x01A6BC4, H + 1);//1280
+
+	/*004D9660  |. 68 F85F0100    PUSH 15FF8
+*/
 
 }
 DWORD u_7A5500 ;
