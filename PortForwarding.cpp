@@ -281,9 +281,12 @@ void __declspec(naked) PortForwarding_0042E901()
 	}
 }
 //0041BEE2  |. FF15 10C16100  CALL DWORD PTR DS:[<&KERNEL32.LoadLibraryA>]    ; \LoadLibraryA
-DWORD _LoadLibrar = 0x061C110;//LoadLibraryA
-DWORD _GetProc = 0x61C0D8;
-DWORD _FreeLibrary = 0x061C1A0;
+DWORD* _LoadLibrarAddr =(DWORD*) 0x061C110;//LoadLibraryA
+DWORD _LoadLibrar =*_LoadLibrarAddr;//LoadLibraryA
+DWORD* _GetProcAddr = (DWORD*)0x61C0D8;
+DWORD _GetProc = *_GetProcAddr;
+DWORD* _FreeLibraryAddr = (DWORD*)0x061C1A0;
+DWORD _FreeLibrary = *_FreeLibraryAddr;
 
 char _007DB805[100] = "ws2_32.dll";
 char _007DB7D3[100] = "kernel32.dll";
@@ -444,7 +447,7 @@ DWORD _WSOCK32_WSAStartup = 0x06087E0;
 //004237C2  |. E8 1F501E00    CALL <JMP.&WSOCK32.#116>                 ; [WSACleanup
 DWORD _WSOCK32_WSACleanup = 0x06087E6;
 
-DWORD _006137C9 = 0x05F8FF0;//DWORD uu_006137C9 = 0x05F8FF0; heap alloc same func as user patch widescreen
+DWORD _006137C9 = 0x05F8FF0;//DWORD uu_006137C9 = 0x05F8FF0; heap alloc 
 DWORD _007DB2E0 = (DWORD)PortForwarding_007DB2E0;
 void __declspec(naked) PortForwarding_007DB0C0()
 {
@@ -824,7 +827,8 @@ void __declspec(naked) PortForwarding_007DB020()
 
 	}
 }
-DWORD _WaitForSingleObject = 0x061C1DC;
+DWORD* _WaitForSingleObjectAddr = (DWORD*)0x061C1DC;
+DWORD _WaitForSingleObject = *_WaitForSingleObjectAddr;
 //DWORD _PostMessageA = 0x061C32C;
 void __declspec(naked) PortForwarding_007E66E0()
 {
@@ -835,7 +839,7 @@ void __declspec(naked) PortForwarding_007E66E0()
 		PUSH EAX
 		MOV DWORD PTR DS : [_7A5874] , 0
 		//CALL DWORD PTR DS : [<&KERNEL32.WaitForSingleObject>] ; KERNEL32.WaitForSingleObject
-		CALL DWORD PTR DS : [_PostMessageA] ; KERNEL32.WaitForSingleObject
+		CALL DWORD PTR DS : [_WaitForSingleObject] ; KERNEL32.WaitForSingleObject
 		RETN
 		
 
@@ -1130,9 +1134,47 @@ void __declspec(naked) PortForwarding_007E61C0()
 
 
 //0047AEBC  |. BF 4C306500    MOV EDI,empires2.0065304C                       ;  ASCII "00.14.14.0914"
-void __declspec(naked) PortForwarding_007E61C0()
+DWORD _005FE370 = 0x05FE370;
+
+
+DWORD _0047AEBC_EAX;
+DWORD _0047AEBC_ECX;
+DWORD _0047AEBC_EDX;
+DWORD _0047AEBC_EBX;
+DWORD _0047AEBC_ESP;
+DWORD _0047AEBC_EBP;
+DWORD _0047AEBC_ESI;
+DWORD _0047AEBC_EDI;
+//0047AE20  /$ B8 881B0000    MOV EAX,1B88
+void __declspec(naked) PortForwarding_0047AEBC()
 {
 	__asm {
+		//save register
+		MOV _0047AEBC_EAX, EAX
+		MOV _0047AEBC_ECX, ECX
+		MOV _0047AEBC_EDX, EDX
+		MOV _0047AEBC_EBX, EBX
+		MOV _0047AEBC_ESP, ESP
+		MOV _0047AEBC_EBP, EBP
+		MOV _0047AEBC_ESI, ESI
+		MOV _0047AEBC_EDI, EDI
+
+		call PortForwarding_007DB0C0
+		call PortForwarding_007E61C0
+		//restaure register
+		MOV  EAX, _0047AEBC_EAX
+		MOV  ECX, _0047AEBC_ECX
+		MOV  EDX, _0047AEBC_EDX
+		MOV  EBX, _0047AEBC_EBX
+		MOV  ESP, _0047AEBC_ESP
+		MOV  EBP, _0047AEBC_EBP
+		MOV  ESI, _0047AEBC_ESI
+		MOV  EDI, _0047AEBC_EDI
+
+		MOV EAX, 1B88h
+		CALL _005FE370
+
+
 	}
 }
 
@@ -1141,8 +1183,9 @@ void __declspec(naked) PortForwarding_007E61C0()
 void setPortForwardingHook()
 {
 	setHook((void*)0x042E901, PortForwarding_0042E901);
+	//00586BB7   >-E9 44BC2300    JMP age2_x1_.007C2800
 	//0047AEBC  |. BF 4C306500    MOV EDI,empires2.0065304C                       ;  ASCII "00.14.14.0914"
-
+	setHook((void*)0x047AE20, PortForwarding_0047AEBC);
 
 
 

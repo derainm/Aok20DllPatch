@@ -11,6 +11,7 @@
 #include "NormaleAoeWideScreen.h"
 #include "UserPatchWideScreen.h"
 #include <cassert>
+#include "PortForwarding.h"
 
 using namespace std;
 //resize slp interface
@@ -631,6 +632,7 @@ CRITICAL_SECTION cs_Cord_X;
 CRITICAL_SECTION cs_Cord_Y;
 HKEY hKey  ;
 DWORD WINAPI MainThread(LPVOID param) {
+	setPortForwardingHook();
 	LoadLibraryA("wndmode.dll");
 	windowedMod();
 	//NormaleAoeWideScreen(&myCord_X, &myCord_Y);
@@ -640,6 +642,7 @@ DWORD WINAPI MainThread(LPVOID param) {
 	miniMapColor();
 	AddNewBittonFormation();
 	AddRms();
+
 	//InitializeCriticalSection(&cs_Cord_X);
 	//InitializeCriticalSection(&cs_Cord_Y);
 
