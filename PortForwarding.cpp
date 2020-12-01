@@ -5,6 +5,7 @@ char _007DB7BD[100] = "TCP";
 char _007DB7C5[100] = "empires2:%s.%d";
 DWORD ___005FCE14 = 0x05FCE14;
 DWORD _00605C40 = 0x0605C40;
+DWORD _7A5800;
 DWORD _7A5144;
 DWORD _7A5140;
 DWORD _7A5154;
@@ -16,6 +17,29 @@ DWORD _7A5160;
 DWORD _7A5164;
 DWORD _7A5168;
 DWORD _7A514C;
+DWORD _7A5854;
+DWORD _7A5858;
+DWORD _7A585C;
+DWORD _7A5860;
+DWORD _7A5810;
+DWORD _7A5814;
+DWORD _7A5818;
+DWORD _7A581C;
+DWORD _7A5820;
+DWORD _7A5824;
+DWORD _7A5828;
+DWORD _7A582C;
+DWORD _7A5830;
+DWORD _7A5834;
+DWORD _7A5838;
+DWORD _7A583C;
+DWORD _7A5840;
+DWORD _7A5844;
+DWORD _7A5848;
+DWORD _7A584C;
+DWORD _7A5850;
+DWORD _7A5870;
+DWORD _7A5874;
 
 void __declspec(naked) PortForwarding_007DB530()
 {
@@ -800,18 +824,326 @@ void __declspec(naked) PortForwarding_007DB020()
 
 	}
 }
+DWORD _WaitForSingleObject = 0x061C1DC;
+//DWORD _PostMessageA = 0x061C32C;
+void __declspec(naked) PortForwarding_007E66E0()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR DS : [_7A5870]
+		PUSH - 1h
+		PUSH EAX
+		MOV DWORD PTR DS : [_7A5874] , 0
+		//CALL DWORD PTR DS : [<&KERNEL32.WaitForSingleObject>] ; KERNEL32.WaitForSingleObject
+		CALL DWORD PTR DS : [_PostMessageA] ; KERNEL32.WaitForSingleObject
+		RETN
+		
+
+	}
+}
+
+DWORD _7A5880[100];
+DWORD _007E66E0 = (DWORD)PortForwarding_007E66E0;
+DWORD ECX_007E63E0;
+void __declspec(naked) PortForwarding_007E63E0()
+{
+	__asm {
+		PUSH EDI
+		CALL _007E66E0
+		MOV EDI, 1Fh
+		_007E63EB:
+		MOV ECX_007E63E0,ECX
+		MOV ECX, _7A5880
+		//MOV EAX, DWORD PTR DS : [EDI * 4 + 7A5880]
+		MOV EAX, DWORD PTR DS : [EDI * 4h + ECX]
+		MOV ECX, ECX_007E63E0
+
+		PUSH EAX
+		CALL _006139B4
+
+		MOV ECX_007E63E0, ECX
+		MOV ECX, _7A5880
+		//MOV DWORD PTR DS : [EDI * 4 + 7A5880] , 0h
+		MOV DWORD PTR DS : [EDI * 4 + ECX] , 0h
+		MOV ECX, ECX_007E63E0
+
+		ADD ESP, 4h
+		DEC EDI
+		JGE short _007E63EB
+		MOV EAX, DWORD PTR DS : [_7A5810]
+		TEST EAX, EAX
+		JE short _007E6419
+		PUSH EAX
+		//CALL DWORD PTR DS : [<&KERNEL32.FreeLibrary>] ; KERNEL32.FreeLibrary
+		CALL DWORD PTR DS : [_FreeLibrary] ; KERNEL32.FreeLibrary
+		_007E6419:
+		//MOV EAX, DWORD PTR DS : [7A5800]
+		//todo check if is correct
+		MOV EAX, DWORD PTR DS : [_7A5800]
+		TEST EAX, EAX
+		JE short _007E6429
+		PUSH EAX
+		//CALL DWORD PTR DS : [<&KERNEL32.FreeLibrary>] ; KERNEL32.FreeLibrary
+		CALL DWORD PTR DS : [_FreeLibrary] ; KERNEL32.FreeLibrary
+		_007E6429:
+		XOR EAX, EAX
+		//MOV EDI, age2_x1_.007A5800
+		MOV EDI, _7A5880
+		MOV ECX, 20h
+		REP STOS DWORD PTR ES : [EDI]
+		POP EDI
+		RETN
+
+	}
+}
+//initialize socket thread ?
+
+DWORD _007E63E0 =(DWORD)PortForwarding_007E63E0;
+char _007E6DBD[100] = "kernel32.dll";
+char _007E6DCA[100] = "CreateThread";
+char _007E6DD7[100] = "Sleep";
+char _007E6DDD[100] = "InterlockedIncrement";
+char _007E6DF2[100] = "InterlockedDecrement";
+char _007E6E07[100] = "ws2_32.dll";
+char _007E6E12[100] = "WSAStartup";
+char _007E6E1D[100] = "WSACleanup";
+char _007E6E28[100] = "__WSAFDIsSet";
+char _007E6E35[100] = "getaddrinfo";
+char _007E6E41[100] = "freeaddrinfo";
+char _007E6E4E[100] = "socket";
+char _007E6E55[100] = "bind";
+char _007E6E5A[100] = "setsockopt";
+char _007E6E65[100] = "listen";
+char _007E6E6C[100] = "shutdown";
+char _007E6E75[100] = "closesocket";
+char _007E6E81[100] = "select";
+char _007E6E88[100] = "WSAAccept";
+char _007E6E92[100] = "send";
+char _007E6E97[100] = "recv";
+char _007E6E9C[100] = "WSAIoctl";
+
+DWORD ECX_007E61C0;
+void __declspec(naked) PortForwarding_007E61C0()
+{
+	__asm {
+		PUSH ESI
+		PUSH EDI
+		CALL _007E63E0
+		PUSH offset _007E6DBD; ASCII "kernel32.dll"
+		//MOV EDI, DWORD PTR DS : [<&KERNEL32.GetProcAddress>] ; KERNEL32.GetProcAddress
+		MOV EDI, DWORD PTR DS : [_GetProc] ; KERNEL32.GetProcAddress
+		//CALL DWORD PTR DS : [<&KERNEL32.LoadLibraryA>] ; KERNEL32.LoadLibraryA
+		CALL DWORD PTR DS : [_LoadLibrar] ; KERNEL32.LoadLibraryA
+		MOV ESI, EAX
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5800] , EAX
+		PUSH offset _007E6DCA; ASCII "CreateThread"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5854] , EAX
+		PUSH offset _007E6DD7; ASCII "Sleep"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5858] , EAX
+		PUSH offset _007E6DDD; ASCII "InterlockedIncrement"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A585C] , EAX
+		PUSH offset _007E6DF2; ASCII "InterlockedDecrement"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5860] , EAX
+		PUSH offset _007E6E07; ASCII "ws2_32.dll"
+		//MOV EDI, DWORD PTR DS : [<&KERNEL32.GetProcAddress>] ; KERNEL32.GetProcAddress
+		MOV EDI, DWORD PTR DS : [_GetProc] ; KERNEL32.GetProcAddress
+		//CALL DWORD PTR DS : [<&KERNEL32.LoadLibraryA>] ; KERNEL32.LoadLibraryA
+		CALL DWORD PTR DS : [_LoadLibrar] ; KERNEL32.LoadLibraryA
+		MOV ESI, EAX
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5810] , EAX
+		PUSH offset _007E6E12; ASCII "WSAStartup"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5814] , EAX
+		push offset _007E6E1D; ASCII "WSACleanup"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5818] , EAX
+		push offset _007E6E28; ASCII "__WSAFDIsSet"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A581C] , EAX
+		push offset _007E6E35; ASCII "getaddrinfo"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5820] , EAX
+		push offset _007E6E41; ASCII "freeaddrinfo"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5824] , EAX
+		push offset _007E6E4E; ASCII "socket"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5828] , EAX
+		push offset _007E6E55; ASCII "bind"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A582C] , EAX
+		push offset _007E6E5A; ASCII "setsockopt"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5830] , EAX
+		push offset _007E6E65; ASCII "listen"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5834] , EAX
+		push offset _007E6E6C; ASCII "shutdown"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A5838] , EAX
+		push offset _007E6E75; ASCII "closesocket"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE _007E63D4
+		MOV DWORD PTR DS : [_7A583C] , EAX
+		push offset _007E6E81; ASCII "select"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE short _007E63D4
+		MOV DWORD PTR DS : [_7A5840] , EAX
+		push offset _007E6E88; ASCII "WSAAccept"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE short _007E63D4
+		MOV DWORD PTR DS : [_7A5844] , EAX
+		push offset _007E6E92; ASCII "send"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE short _007E63D4
+		MOV DWORD PTR DS : [_7A5848] , EAX
+		push offset _007E6E97; ASCII "recv"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE short _007E63D4
+		MOV DWORD PTR DS : [_7A584C] , EAX
+		push offset _007E6E9C; ASCII "WSAIoctl"
+		PUSH ESI
+		CALL EDI
+		TEST EAX, EAX
+		JE short _007E63D4
+		MOV DWORD PTR DS : [_7A5850] , EAX
+		XOR EDI, EDI
+		_007E63AF:
+		PUSH 20h
+		PUSH 1h
+		CALL _006137C9
+
+		MOV	ECX_007E61C0,ECX
+		MOV ECX, _7A5880
+		//MOV DWORD PTR DS : [EDI * 4 + 7A5880] , EAX
+		MOV DWORD PTR DS : [EDI * 4 + ECX] , EAX
+		MOV	ECX_007E61C0, ECX
+
+		ADD ESP, 8h
+		INC EDI
+		TEST EAX, EAX
+		JE short _007E63CE
+		CMP EDI, 20h
+		JL short _007E63AF
+		JMP short _007E63D4
+		_007E63CE:
+		MOV DWORD PTR DS : [_7A5850] , EAX
+		_007E63D4:
+		POP EDI
+		POP ESI
+		RETN
 
 
+	}
+}
 
 
 
 
 //007DB020   83EC 20          SUB ESP,20    where it is called?
+
+
+//00586BB7   >-E9 44BC2300    JMP age2_x1_.007C2800
 //0x7c2870
+//007C2875   E8 46390200      CALL age2_x1_.007E61C0
 //0x7c288a
+
+//loaded
+//007C2870   E8 4B880100      CALL age2_x1_.007DB0C0
+//007C2875   E8 46390200      CALL age2_x1_.007E61C0
+
+//when game exist free library
+//005873B7   . 6A 10          PUSH 10; / Style = MB_OK | MB_ICONHAND | MB_APPLMODAL
+//005873B9   . 8D8C24 A01A000 > LEA ECX, DWORD PTR SS : [ESP + 1AA0] ; |
+//005873C0   . 50             PUSH EAX; | Title
+//005873C1   . 51             PUSH ECX; | Text
+//005873C2   . 53             PUSH EBX; | hOwner
+//005873C3.FF15 34536300  CALL DWORD PTR DS : [<&USER32.MessageBoxA>] ; \MessageBoxA
+//005873C9 > -E9 B2B42300    JMP age2_x1_.007C2880
+
+
+//007C2880   E8 ABC0DCFF      CALL age2_x1_.0058E930
+//007C2885   E8 563B0200      CALL age2_x1_.007E63E0
+//007C288A   E8 D18B0100      CALL age2_x1_.007DB460
+//007C288F   E8 4C380000      CALL age2_x1_.007C60E0
+
+
+
+//0047AEBC  |. BF 4C306500    MOV EDI,empires2.0065304C                       ;  ASCII "00.14.14.0914"
+void __declspec(naked) PortForwarding_007E61C0()
+{
+	__asm {
+	}
+}
+
 
 
 void setPortForwardingHook()
 {
 	setHook((void*)0x042E901, PortForwarding_0042E901);
+	//0047AEBC  |. BF 4C306500    MOV EDI,empires2.0065304C                       ;  ASCII "00.14.14.0914"
+
+
+
+
 }
