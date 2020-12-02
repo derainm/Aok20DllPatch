@@ -635,8 +635,8 @@ DWORD WINAPI MainThread(LPVOID param) {
 	setPortForwardingHook();
 	LoadLibraryA("wndmode.dll");
 	windowedMod();
-	//NormaleAoeWideScreen(&myCord_X, &myCord_Y);
-	UserPatchWideScreen();// &myCord_X, & myCord_Y);
+	NormaleAoeWideScreen(&myCord_X, &myCord_Y);
+	//UserPatchWideScreen();// &myCord_X, & myCord_Y);
 	//chatColor();
 	//chatchatColorFixe();
 	miniMapColor();
@@ -669,16 +669,19 @@ DWORD WINAPI MainThread(LPVOID param) {
 		//EnterCriticalSection(&cs_Cord_X);
 
 
-		if ((preX == H && PreY == V)|| (ppreX == H && pPreY == V))
-		{
-			//u_Cord_Y = GetSystemMetrics(SM_CYSCREEN);
-			//u_Cord_X = GetSystemMetrics(SM_CXSCREEN);
-			writeDwordF(0x01BCE7 - 1, GetSystemMetrics(SM_CXSCREEN));//  1024      1024    set
-			writeDwordF(0x01BCF4 - 1, GetSystemMetrics(SM_CYSCREEN));//   768       768    set
-			patchEXE(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-		}
-		else
-			patchEXE(H, V);
+			if ((preX == H && PreY == V) || (ppreX == H && pPreY == V))
+			{
+				//u_Cord_Y = GetSystemMetrics(SM_CYSCREEN);
+				//u_Cord_X = GetSystemMetrics(SM_CXSCREEN);
+				writeDwordF(0x01BCE7 - 1, GetSystemMetrics(SM_CXSCREEN));//  1024      1024    set
+				writeDwordF(0x01BCF4 - 1, GetSystemMetrics(SM_CYSCREEN));//   768       768    set
+				//WideScreen
+				WideScreen(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			}
+			else
+				WideScreen(H, V);
+
+
 
 	}
 	FreeLibraryAndExitThread((HMODULE)param, 0);

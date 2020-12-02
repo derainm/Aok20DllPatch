@@ -280,11 +280,111 @@ void __declspec(naked) PortForwarding_0042E901()
 		JMP _0042E906
 	}
 }
+
+void __declspec(naked) PortForwarding_007DB690()
+{
+	__asm {
+
+		MOV EDX, DWORD PTR SS : [ESP + 8h]
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		PUSH EDX
+		PUSH EAX
+		CALL _007DB5E0
+		CMP EAX, 1h
+		JNZ short _007DB6DF
+		MOV EDX, DWORD PTR SS : [ESP + 8h]
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		PUSH EDX
+		PUSH EAX
+		CALL _007DB530
+		MOV EDX, DWORD PTR SS : [ESP + 8h]
+		NEG EDX
+		SBB EDX, EDX
+		AND EDX, 0FFFFFF9Bh
+		ADD EDX, 65h
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		SUB EAX, 8FCh
+		ADD EAX, EDX
+		MOV EDX, DWORD PTR DS : [_7A514C]
+		MOV ECX, 1h
+		MOV BYTE PTR DS : [EAX + EDX] , CL
+		MOV EAX, ECX
+		_007DB6DF :
+		RETN 8h
+
+
+	}
+}
+//007DB020   83EC 20          SUB ESP,20
+DWORD EAX_007DB09B;
+DWORD _007DB690 = (DWORD)PortForwarding_007DB690;
+void __declspec(naked) PortForwarding_007DB020()
+{
+	__asm {
+		SUB ESP, 20h
+		MOV ECX, DWORD PTR SS : [ESP + 28h]
+		MOVZX EAX, WORD PTR DS : [ECX + 2h]
+		ROR AX, 8h
+		CMP AX, 8FCh
+		JB short _007DB093
+		CMP AX, 960h
+		JA short _007DB093
+		MOV DWORD PTR SS : [ESP + 14h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 24h]
+		LEA ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP]
+		MOV DWORD PTR DS : [ECX] , 10h
+		PUSH ECX
+		PUSH EDX
+		PUSH 1008h
+		PUSH 0FFFFh
+		PUSH EAX
+		CALL DWORD PTR DS : [_7A5164]
+		TEST EAX, EAX
+		JNZ short _007DB093
+		MOV EAX, DWORD PTR SS : [ESP]
+		DEC EAX
+		AND EAX, 1h
+		MOV EDX, DWORD PTR SS : [ESP + 14h]
+		PUSH EAX
+		PUSH EDX
+		CALL _007DB690
+		TEST EAX, EAX
+		JNZ short _007DB093
+		PUSH 271Dh
+		CALL DWORD PTR DS : [_7A5168]
+		MOV EAX, -1h
+		ADD ESP, 20h
+		RETN 0Ch
+		_007DB093 :
+		ADD ESP, 20h
+		MOV EDI, EDI
+		PUSH EBP
+		MOV EBP, ESP
+		//007DB09B   E9 604F82FF      JMP 00000000
+		/*MOV EAX_007DB09B, EAX
+		MOV EAX, __007DB09B
+		MOV _007DB09B, EAX
+		MOV  EAX, EAX_007DB09B
+		__007DB09B :*/
+		//dynamic jump
+		JMP _007DB09B //00000000h
+
+
+	}
+}
+
+
 //0041BEE2  |. FF15 10C16100  CALL DWORD PTR DS:[<&KERNEL32.LoadLibraryA>]    ; \LoadLibraryA
 DWORD* _LoadLibrarAddr =(DWORD*) 0x061C110;//LoadLibraryA
 DWORD _LoadLibrar =*_LoadLibrarAddr;//LoadLibraryA
 DWORD* _GetProcAddr = (DWORD*)0x61C0D8;
 DWORD _GetProc = *_GetProcAddr;
+//0041B9FB  |. FF15 B4C16100  CALL DWORD PTR DS:[<&KERNEL32.GetCurrentDirectoryA>]   ; \GetCurrentDirectoryA
+DWORD* _GetProcCurrentAddr = (DWORD*)0x61C130;
+DWORD _GetProcCurrent = *_GetProcCurrentAddr;
+
+
 DWORD* _FreeLibraryAddr = (DWORD*)0x061C1A0;
 DWORD _FreeLibrary = *_FreeLibraryAddr;
 
@@ -297,6 +397,12 @@ char _007DB83E[100] = "bind";
 char _007DB810[100] = "getsockname";
 char _007DB81C[100] = "getsockopt";
 char _007DB827[100] = "WSASetLastError";
+DWORD _VirtualProtec;
+DWORD _007DB020 =(DWORD)PortForwarding_007DB020;
+DWORD __007DB09B =(DWORD)PortForwarding_007DB020 + 0x87;
+DWORD ourFunct; 
+DWORD toHook = _007DB020;
+DWORD toHook2;
 void __declspec(naked) PortForwarding_007DB2E0()
 {
 	__asm {
@@ -329,6 +435,7 @@ void __declspec(naked) PortForwarding_007DB2E0()
 		PUSH EDI
 		CALL EBP
 		TEST EAX, EAX
+		MOV _VirtualProtec, EAX
 		JE _007DB43F
 		MOV DWORD PTR SS : [ESP + 8h] , EAX
 		PUSH offset _007DB837; ASCII "listen"
@@ -361,12 +468,14 @@ void __declspec(naked) PortForwarding_007DB2E0()
 		TEST EAX, EAX
 		JE _007DB43F
 		MOV DWORD PTR DS : [_7A5168] , EAX
-		//CALL DWORD PTR DS : [<&KERNEL32.GetCurrentProcess>] ; KERNEL32.GetCurrentProcess
-		CALL DWORD PTR DS : [_GetProc] ; KERNEL32.GetCurrentProcess
+
+		//CALL DWORD PTR DS : [<&KERNEL32.GetCurrent>; KERNEL32.GetCurrentProcess
+		CALL DWORD PTR DS : [_GetProcCurrent] ; KERNEL32.GetCurrentProcess
 		MOV DWORD PTR SS : [ESP] , EAX
 		LEA EAX, DWORD PTR SS : [ESP + 18h]
 		MOV ECX, DWORD PTR SS : [ESP + 10h]
-		PUSH EAX
+		MOV ourFunct,ECX
+		/*PUSH EAX
 		PUSH 40h
 		PUSH 5h
 		PUSH ECX
@@ -375,19 +484,31 @@ void __declspec(naked) PortForwarding_007DB2E0()
 		PUSH EAX
 		PUSH 40h
 		PUSH 5h
-		PUSH _007DB09B  //dynamic jump
+		PUSH __007DB09B
 		CALL DWORD PTR SS : [ESP + 18h]
 		MOV EAX, DWORD PTR SS : [ESP + 10h]
 		LEA ECX, DWORD PTR DS : [EAX + 5h]
-		LEA EDX, DWORD PTR DS : [ECX + 0FF824FE0h]
-		NEG EDX
-		MOV BYTE PTR DS : [EAX] , 0E9h
+		LEA EDX, DWORD PTR DS : [ECX + 0FF824FE0h]*/
+	}
+	Hook((void*)ourFunct, (void*)toHook,5);
+	__asm {
+		/*NEG EDX
+		MOV BYTE PTR DS : [EAX] , 0E9h//hook jmp
 		MOV DWORD PTR DS : [EAX + 1h] , EDX
-		MOV EAX, _007DB09B
-		LEA EDX, DWORD PTR DS : [EAX + 5h]
-		SUB ECX, EDX
-		MOV BYTE PTR DS : [EAX] , 0E9h
-		MOV DWORD PTR DS : [EAX + 1] , ECX
+		*/
+		MOV EAX, __007DB09B
+		//LEA EDX, DWORD PTR DS : [EAX + 5h]
+		MOV EAX, DWORD PTR SS : [ESP + 10h]
+		LEA ECX, DWORD PTR DS : [EAX + 5h]
+		MOV toHook2, ECX
+	}
+	Hook((void*)__007DB09B, (void*)toHook2, 5);
+	__asm{
+
+
+		/*SUB ECX, EDX
+		MOV BYTE PTR DS : [EAX] , 0E9h//hook jmp
+		MOV DWORD PTR DS : [EAX + 1h] , ECX*/
 		MOV ECX, DWORD PTR SS : [ESP + 10h]
 		MOV EAX, DWORD PTR SS : [ESP]
 		PUSH 5h
@@ -404,25 +525,25 @@ void __declspec(naked) PortForwarding_007DB2E0()
 		CALL DWORD PTR SS : [ESP + 18h]
 		MOV EAX, DWORD PTR SS : [ESP]
 		PUSH 5h
-		PUSH _007DB09B
+		PUSH __007DB09B
 		PUSH EAX
 		CALL DWORD PTR SS : [ESP + 10h]
 		LEA EAX, DWORD PTR SS : [ESP + 1Ch]
 		MOV EDX, DWORD PTR DS : [EAX]
-		PUSH EAX
+		/*PUSH EAX
 		PUSH EDX
 		PUSH 5h
-		PUSH _007DB09B
-		CALL DWORD PTR SS : [ESP + 18h]
-		_007DB43F:
-		PUSH EDI
-		//CALL DWORD PTR DS : [<&KERNEL32.FreeLibrary>] ; KERNEL32.FreeLibrary
-		CALL DWORD PTR DS : [_FreeLibrary] ; KERNEL32.FreeLibrary
-		_007DB446:
-		PUSH ESI
-		//CALL DWORD PTR DS : [<&KERNEL32.FreeLibrary>] ; KERNEL32.FreeLibrary
-		CALL DWORD PTR DS : [_FreeLibrary] ; KERNEL32.FreeLibrary
-		_007DB44D:
+		PUSH __007DB09B
+		CALL DWORD PTR SS : [ESP + 18h]*/
+		_007DB43F :
+		/*PUSH EDI*/
+		//CALL DWORD PTR DS : [<&KERNEL32.FreeLibrar>; KERNEL32.FreeLibrary
+		/*CALL DWORD PTR DS : [_FreeLibrary] ; KERNEL32.FreeLibrary*/
+		_007DB446 :
+		/*PUSH ESI*/
+		//CALL DWORD PTR DS : [<&KERNEL32.FreeLibrar>; KERNEL32.FreeLibrary
+		/*CALL DWORD PTR DS : [_FreeLibrary] ; KERNEL32.FreeLibrary*/
+		_007DB44D :
 		ADD ESP, 20h
 		POP EBP
 		POP EBX
@@ -733,100 +854,8 @@ void __declspec(naked) PortForwarding_007DB460()
 	}
 }
 
-void __declspec(naked) PortForwarding_007DB690()
-{
-	__asm {
-
-		MOV EDX, DWORD PTR SS : [ESP + 8h]
-		MOV EAX, DWORD PTR SS : [ESP + 4h]
-		PUSH EDX
-		PUSH EAX
-		CALL _007DB5E0
-		CMP EAX, 1h
-		JNZ short _007DB6DF
-		MOV EDX, DWORD PTR SS : [ESP + 8h]
-		MOV EAX, DWORD PTR SS : [ESP + 4h]
-		PUSH EDX
-		PUSH EAX
-		CALL _007DB530
-		MOV EDX, DWORD PTR SS : [ESP + 8h]
-		NEG EDX
-		SBB EDX, EDX
-		AND EDX, 0FFFFFF9Bh
-		ADD EDX, 65h
-		MOV EAX, DWORD PTR SS : [ESP + 4h]
-		SUB EAX, 8FCh
-		ADD EAX, EDX
-		MOV EDX, DWORD PTR DS : [_7A514C]
-		MOV ECX, 1h
-		MOV BYTE PTR DS : [EAX + EDX] , CL
-		MOV EAX, ECX
-		_007DB6DF:
-		RETN 8h
 
 
-	}
-}
-
-
-//007DB020   83EC 20          SUB ESP,20
-DWORD EAX_007DB09B;
-DWORD _007DB690 = (DWORD)PortForwarding_007DB690;
-void __declspec(naked) PortForwarding_007DB020()
-{
-	__asm {
-		SUB ESP, 20h
-		MOV ECX, DWORD PTR SS : [ESP + 28h]
-		MOVZX EAX, WORD PTR DS : [ECX + 2h]
-		ROR AX, 8h
-		CMP AX, 8FCh
-		JB short _007DB093
-		CMP AX, 960h
-		JA short _007DB093
-		MOV DWORD PTR SS : [ESP + 14h] , EAX
-		MOV EAX, DWORD PTR SS : [ESP + 24h]
-		LEA ECX, DWORD PTR SS : [ESP + 10h]
-		LEA EDX, DWORD PTR SS : [ESP]
-		MOV DWORD PTR DS : [ECX] , 10h
-		PUSH ECX
-		PUSH EDX
-		PUSH 1008h
-		PUSH 0FFFFh
-		PUSH EAX
-		CALL DWORD PTR DS : [_7A5164]
-		TEST EAX, EAX
-		JNZ short _007DB093
-		MOV EAX, DWORD PTR SS : [ESP]
-		DEC EAX
-		AND EAX, 1h
-		MOV EDX, DWORD PTR SS : [ESP + 14h]
-		PUSH EAX
-		PUSH EDX
-		CALL _007DB690
-		TEST EAX, EAX
-		JNZ short _007DB093
-		PUSH 271Dh
-		CALL DWORD PTR DS : [_7A5168]
-		MOV EAX, -1h
-		ADD ESP, 20h
-		RETN 0Ch
-		_007DB093:
-		ADD ESP, 20h
-		MOV EDI, EDI
-		PUSH EBP
-		MOV EBP, ESP
-		//007DB09B   E9 604F82FF      JMP 00000000
-		MOV EAX_007DB09B,EAX
-		MOV EAX, __007DB09B
-		MOV _007DB09B,EAX
-		MOV  EAX, EAX_007DB09B
-		__007DB09B:
-		//dynamic jump
-		JMP _007DB09B //00000000h
-
-
-	}
-}
 DWORD* _WaitForSingleObjectAddr = (DWORD*)0x061C1DC;
 DWORD _WaitForSingleObject = *_WaitForSingleObjectAddr;
 //DWORD _PostMessageA = 0x061C32C;
@@ -1146,6 +1175,7 @@ DWORD _0047AEBC_EBP;
 DWORD _0047AEBC_ESI;
 DWORD _0047AEBC_EDI;
 //0047AE20  /$ B8 881B0000    MOV EAX,1B88
+DWORD _0047AE2A = 0x047AE2A;
 void __declspec(naked) PortForwarding_0047AEBC()
 {
 	__asm {
@@ -1160,7 +1190,7 @@ void __declspec(naked) PortForwarding_0047AEBC()
 		MOV _0047AEBC_EDI, EDI
 
 		call PortForwarding_007DB0C0
-		call PortForwarding_007E61C0
+		//call PortForwarding_007E61C0
 		//restaure register
 		MOV  EAX, _0047AEBC_EAX
 		MOV  ECX, _0047AEBC_ECX
@@ -1173,13 +1203,13 @@ void __declspec(naked) PortForwarding_0047AEBC()
 
 		MOV EAX, 1B88h
 		CALL _005FE370
-
+		JMP _0047AE2A
 
 	}
 }
 
 
-
+//0060034A  
 void setPortForwardingHook()
 {
 	setHook((void*)0x042E901, PortForwarding_0042E901);
