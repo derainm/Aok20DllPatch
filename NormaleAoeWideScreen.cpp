@@ -953,8 +953,13 @@ void WideScreen(int H, int V)
 	}
 	else if (V >= 600 && V < 768)
 	{
-		writeDwordF(0x00DAA84, V - 230);
+		//writeDwordF(0x00DAA84, V - 230);
+		writeDwordF(0x00DAA84, V - 200);
+		writeByte(0x04DAA8F, 0x19);
+		//writeByte(0x04DA6EF + 1, 0x84);
+		//writeByte(0x04DAD9D + 1, 0x84);
 	}
+
 	//if (V >= 600 && V < 768)
 	//	precY = 600;
 
@@ -1010,11 +1015,18 @@ void WideScreen(int H, int V)
 		writeDwordF(0x00DAABD, V + ratioV - 187);
 		writeDwordF(0x00DAAC4, H + ratioH - 369);
 	}
-	else if (V < 1024 && V >= 768)
+	else if (V < 1024 && V >= 600)
 	{
 		writeDwordF(0x00DAABD, V + ratioV - 169);
 		writeDwordF(0x00DAAC4, H + ratioH - 336);
 	}
+	//else if (V >= 600 && V < 768)
+	//{
+	//	//writeDwordF(0x00DAABD, V + ratioV - 169);
+	//	//writeDwordF(0x00DAAC4, H + ratioH - 336);
+	//	writeDwordF(0x00DAABD, V + ratioV - 187);
+	//	writeDwordF(0x00DAAC4, H + ratioH - 369);
+	//}
 
 	//mini map size
 	//004DAAD2     68 E9C40000            PUSH 0xC4E9
@@ -1038,6 +1050,7 @@ void WideScreen(int H, int V)
 	}
 	else if (V < 768 && V >= 600)
 	{
+
 		writeDwordF(0xDAAD2, 0xC4EB);
 		//004DAAB8     68 8A010000    PUSH 0x18A
 		//004DAAB8     68 8A010000    PUSH 0x18A
@@ -1607,5 +1620,8 @@ void NormaleAoeWideScreen(DWORD* myCord_X , DWORD* myCord_Y)
 	*myCord_X = Cord_X;
 	*myCord_Y = Cord_Y;
 
-
+	//fix bug  1280 force to jum 1024x768
+//004DA6F5     E9 52030000    JMP 004DAA4C
+	BYTE _004DAA4C[] = { 0xE9,0x52,0x03,0x00,0x00,0x90 };
+	writeData(0x04DA6F5, _004DAA4C, 6);
 }

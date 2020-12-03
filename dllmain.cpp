@@ -660,7 +660,7 @@ DWORD WINAPI MainThread(LPVOID param) {
 
 	while (true) {
 
-
+		
 		//EnterCriticalSection(&cs_Cord_Y);
 		V = (int)u_Cord_Y;
 		//LeaveCriticalSection(&cs_Cord_Y);
@@ -668,8 +668,20 @@ DWORD WINAPI MainThread(LPVOID param) {
 		H = (int)u_Cord_X;
 		//EnterCriticalSection(&cs_Cord_X);
 
+		//change interfaace id 
+		if (H < 1024 && V < 768)
+		{
+			BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
+			writeData(0x04DF5B2, _004DF5B2_BACK, 6);
+		}
+		else
+		{
+			BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
+			writeData(0x04DF5B2, _004DF5B2, 6);
+		}
 
-			if ((preX == H && PreY == V) || (ppreX == H && pPreY == V))
+
+			if ((preX == H && PreY == V))// || (ppreX == H && pPreY == V))
 			{
 				//u_Cord_Y = GetSystemMetrics(SM_CYSCREEN);
 				//u_Cord_X = GetSystemMetrics(SM_CXSCREEN);
@@ -679,9 +691,15 @@ DWORD WINAPI MainThread(LPVOID param) {
 				WideScreen(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			}
 			else
+			{
 				WideScreen(H, V);
+			}
+
+		
 
 
+
+				
 
 	}
 	FreeLibraryAndExitThread((HMODULE)param, 0);
