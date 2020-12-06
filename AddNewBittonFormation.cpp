@@ -73,9 +73,16 @@ void __declspec(naked)  AddunitFormation5B30BD()
 }
 //0053AE42
 DWORD _00472E50;
+DWORD __0041F840 = 0x041F840;
 void __declspec(naked)  AddunitFormation53AE42()
 {
 	__asm {
+		/*MOV EDX, DWORD PTR DS : [6645C4h]
+		call __0041F840
+		MOV EAX, dword ptr[ecx + 0A2h]
+		ADD EAX, 0198h
+		MOV EAX, dword ptr[EAX]*/
+
 		CMP EDX, 0AFh
 		JNZ _007E5175
 		LEA EAX, DWORD PTR SS : [ESP + 3h]

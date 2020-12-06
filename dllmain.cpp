@@ -12,6 +12,7 @@
 #include "UserPatchWideScreen.h"
 #include <cassert>
 #include "PortForwarding.h"
+#include "fixLag.h"
 
 using namespace std;
 //resize slp interface
@@ -635,14 +636,14 @@ DWORD WINAPI MainThread(LPVOID param) {
 	setPortForwardingHook();
 	LoadLibraryA("wndmode.dll");
 	windowedMod();
-	NormaleAoeWideScreen(&myCord_X, &myCord_Y);
-	//UserPatchWideScreen();// &myCord_X, & myCord_Y);
+	//NormaleAoeWideScreen(&myCord_X, &myCord_Y);
+	UserPatchWideScreen();// &myCord_X, & myCord_Y);
 	//chatColor();
 	//chatchatColorFixe();
 	miniMapColor();
 	AddNewBittonFormation();
 	AddRms();
-
+	FixLagHook();
 	//InitializeCriticalSection(&cs_Cord_X);
 	//InitializeCriticalSection(&cs_Cord_Y);
 
@@ -688,11 +689,11 @@ DWORD WINAPI MainThread(LPVOID param) {
 				writeDwordF(0x01BCE7 - 1, GetSystemMetrics(SM_CXSCREEN));//  1024      1024    set
 				writeDwordF(0x01BCF4 - 1, GetSystemMetrics(SM_CYSCREEN));//   768       768    set
 				//WideScreen
-				WideScreen(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+				patchEXE(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			}
 			else
 			{
-				WideScreen(H, V);
+				patchEXE(H, V);
 			}
 
 		

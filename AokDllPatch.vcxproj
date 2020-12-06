@@ -154,6 +154,7 @@
     <ClInclude Include="AddNewBittonFormation.h" />
     <ClInclude Include="AddRms.h" />
     <ClInclude Include="chatColor.h" />
+    <ClInclude Include="fixLag.h" />
     <ClInclude Include="FixTorpedoCheatCrashBug.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hookbase.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="AddRms.cpp" />
     <ClCompile Include="chatColor.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="fixLag.cpp" />
     <ClCompile Include="PortForwarding.cpp" />
     <ClCompile Include="FixTorpedoCheatCrashBug.cpp" />
     <ClCompile Include="hook.cpp" />
