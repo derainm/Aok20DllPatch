@@ -1,402 +1,158 @@
 #include <Windows.h>
 #include "Hookbase.h"
 
+//DWORD _004DCA13 = 0x04DCA13;
 
-#pragma region Chat color
-//0042DB70   $ 8B5424 04      MOV EDX,DWORD PTR SS:[ESP+4]
-DWORD JmbackAddressplayerPositions;
-DWORD PTREDX;
-DWORD PTREBX;
-DWORD PTRESP;
-DWORD PTREBP;
-DWORD PTRESI;
-DWORD PTREDI;
-DWORD PTREAX;
-DWORD PTRECX;
-DWORD _782090;
-void __declspec(naked)  playerPositions()
+//get player position
+//00422A87 | . 8B9C24 0C0C0000     MOV EBX, DWORD PTR SS : [ESP + C0C]
+//	00422A80
+DWORD player_position;
+DWORD _00422A86 = 0x0422A86;
+
+
+void __declspec(naked)  getplayerPositionn()
 {
+
 	__asm {
-		MOV PTREDX, EDX
-		MOV PTREBX, EBX
-		MOV PTRESP, ESP
-		MOV PTREBP, EBP
-		MOV PTRESI, ESI
-		MOV PTREDI, EDI
-		MOV PTREAX, EAX
-		MOV PTRECX, ECX
-		MOV EAX, DWORD PTR DS : [ECX + 12C8h]
-		MOV EBX, 0
-		MOV ECX, EAX
-		_007D073D :
-		ADD ECX, 80h
-		INC EBX
-		CMP EDX, EBX
-		JNZ  _007D073D
-		MOVZX EDI, BYTE PTR DS : [ECX]
-		CMP EDI, EDX
-		JE _007D07AC
+		MOV EAX, DWORD PTR SS : [ESP + 0Ch]
+		CMP EAX,-1
+		JNZ normale
+		MOV player_position, 1h
+		SUB ESP, 0C00h
+		JMP _00422A86
 
-		_007D0765 :
-		MOV ESP, 0
-		_007D076A :
-		MOVZX EDI, BYTE PTR DS : [ESP + ECX]
-		MOV DWORD PTR DS : [ESP + _782090] , EDI
-		INC ESP
-		CMP EDI, 0
-		JNZ SHORT _007D076A
-		MOV EBP, _782090
-		MOV DWORD PTR DS : [ECX] , EDX
-		MOV ESP, 0
-
-		_7D0797 :
-		MOVZX EDI, BYTE PTR DS : [ESP + _782090]
-		MOV DWORD PTR DS : [ESP + ECX + 1h] , EDI
-		INC ESP
-		CMP EDI, 0
-		JNZ SHORT _7D0797
-
-
-		_007D07AC :
-		MOV EDX, PTREDX
-		MOV EBX, PTREBX
-		MOV ESP, PTRESP
-		MOV EBP, PTREBP
-		MOV ESI, PTRESI
-		MOV EDI, PTREDI
-		MOV EAX, PTREAX
-		MOV ECX, PTRECX
-
-		XOR EAX, EAX
-		MOV AX, WORD PTR DS : [ECX + 12D8h]
-		jmp[JmbackAddressplayerPositions]
+		normale:
+		MOV player_position, EAX
+		SUB ESP, 0C00h
+		JMP _00422A86 
 	}
-	//cout << PTREDX;
-};
+}
+ 
+ 
+//004DCA3B  |. 68 FF000000         |PUSH 0FF                                          ; |Arg3 = 000000FF
 
-DWORD JmbackAddressplayerChatColor;
-DWORD PPC_PTREAX;
-DWORD PPC_PTRECX;
-DWORD PPC_PTREDX;
-DWORD PPC_PTREBX;
-DWORD PPC_PTRESP;
-DWORD PPC_PTREBP;
-DWORD PPC_PTRESI;
-DWORD PPC_PTREDI;
-DWORD _004DCA40;
-void __declspec(naked)  playerChatColor()
+//004DCA3B  |. 68 FF000000         |PUSH 0FF                                          ; |Arg3 = 000000FF
+//cpt--?
+//004DCA37  |. 8D4C24 34           |LEA ECX,DWORD PTR SS:[ESP+34]                     ; |
+
+DWORD h_EAX;
+DWORD h_ECX;
+DWORD h_EDX;
+DWORD h_EBX;
+DWORD h_ESP;
+DWORD h_EBP;
+DWORD h_ESI;
+DWORD h_EDI;
+
+DWORD _004DCA40 = 0x04DCA40;
+
+DWORD colors[8];
+DWORD cpt = 0;
+
+DWORD pos;
+
+void updateColor()
+{
+
+}
+void __declspec(naked)  chatColor004DCA37()
 {
 	__asm {
-		MOV PPC_PTREAX, EAX
-		MOV PPC_PTRECX, ECX
-		MOV PPC_PTREDX, EDX
-		MOV PPC_PTREBX, EBX
-		MOV PPC_PTRESP, ESP
-		MOV PPC_PTREBP, EBP
-		MOV PPC_PTRESI, ESI
-		MOV PPC_PTREDI, EDI
-		MOVZX EAX, BYTE PTR DS : [ECX]
+		LEA ECX, DWORD PTR SS : [ESP + 34h]
+
+		//save register
+		MOV h_EAX, EAX
+		MOV h_ECX, ECX
+		MOV h_EDX, EDX
+		MOV h_EBX, EBX
+		//MOV h_ESP, ESP
+		MOV h_EBP, EBP
+		MOV h_ESI, ESI
+		MOV h_EDI, EDI
+
+		MOV EDX,0h
+		MOV EDX, DWORD PTR DS : [ESI]
+		CMP EDX,8h
+		JG norm
+		MOV pos,EDX
+
 		MOV EDX, DWORD PTR DS : [6645C4h]
 		MOV ECX, DWORD PTR DS : [EDX + 41Ch]
 		MOV EDX, DWORD PTR DS : [ECX + 4Ch]
-		CMP EAX, 0x1
-		JE SHORT _007D03B9
-		CMP EAX, 0x2
-		JE SHORT _007D03B9
-		CMP EAX, 0x3
-		JE SHORT _007D03B9
-		CMP EAX, 0x4
-		JE SHORT _007D03B9
-		CMP EAX, 0x5
-		JE SHORT _007D03B9
-		CMP EAX, 0x6
-		JE SHORT _007D03B9
-		CMP EAX, 0x7
-		JE SHORT _007D03B9
-		CMP EAX, 0x8
-		JE SHORT _007D03B9
-		JMP _007D0404
+		MOV EAX, pos
+		MOV ECX, DWORD PTR DS : [EDX + 4 * EAX]
 
-		_007D03B9 :
-		MOV EAX, DWORD PTR DS : [EDX + EAX * 4]
-		MOV ECX, DWORD PTR DS : [EAX + 158h]
-		MOV EAX, DWORD PTR DS : [ECX + 10h]
-		MOV ECX, PPC_PTRECX
-		MOV EDX, PPC_PTREDX
-		MOV EBX, PPC_PTREBX
-		MOV ESP, PPC_PTRESP
-		MOV EBP, PPC_PTREBP
-		MOV ESI, PPC_PTRESI
-		MOV EDI, PPC_PTREDI
+		ADD ECX, 158h
+		MOV ECX, DWORD PTR DS : [ECX]
+		ADD ECX, 10h
+		MOV EAX, 0h
+		MOV al, BYTE PTR DS : [ECX]
+
 		CMP EAX, 0F2h
-		JE SHORT _007D044A
-		_007D03F6 :
-		PUSH EAX
-		MOV EAX, PPC_PTREAX
-		JMP[_004DCA40]
-
-		_007D0404 :
-		MOV ECX, PPC_PTRECX
-		MOV EDX, PPC_PTREDX
-		MOV EBX, PPC_PTREBX
-		MOV ESP, PPC_PTRESP
-		MOV EBP, PPC_PTREBP
-		MOV ESI, PPC_PTRESI
-		MOV EDI, PPC_PTREDI
-		PUSH 0FFh
-		MOV EAX, PPC_PTREAX
-		JMP[_004DCA40]
-
-		_007D044A:
+		JNZ  standartColor
 		MOV EAX, 15h
-		jmp[_007D03F6]
+		standartColor :
 
+		PUSH EAX//color
 
+		//restaure register
+		MOV  EAX, h_EAX
+		MOV  ECX, h_ECX
+		MOV  EDX, h_EDX
+		MOV  EBX, h_EBX
+		//MOV  ESP, h_ESP
+		MOV  EBP, h_EBP
+		MOV  ESI, h_ESI
+		MOV  EDI, h_EDI
+
+		JMP _004DCA40
+
+		norm: 
+		push 0FFh
+		//restaure register
+		MOV  EAX, h_EAX
+		MOV  ECX, h_ECX
+		MOV  EDX, h_EDX
+		MOV  EBX, h_EBX
+		//MOV  ESP, h_ESP
+		MOV  EBP, h_EBP
+		MOV  ESI, h_ESI
+		MOV  EDI, h_EDI
+
+		JMP _004DCA40
 	}
 }
-
-
-DWORD _4DCA_PTREAX;
-DWORD _4DCA_PTRECX;
-DWORD _004DCA46;
-void __declspec(naked)  playerChatColor004DCA40()
+//  --Villager Created--
+//set white
+//005B5FF5  |> 8B0D 24456600  MOV ECX,DWORD PTR DS:[664524]                        ; |
+DWORD _005B5FFB = 0x05B5FFB;
+DWORD flagCreated = 0x0;
+void __declspec(naked)  chatColor005B5FF5()
 {
 	__asm {
-
-		MOV _4DCA_PTRECX, ECX
-		MOV _4DCA_PTREAX, EAX
-		MOVZX EAX, BYTE PTR DS : [ECX]
-		CMP EAX, 1h
-		JE SHORT _007D0542
-		CMP EAX, 2h
-		JE SHORT _007D0542
-		CMP EAX, 3h
-		JE SHORT _007D0542
-		CMP EAX, 4h
-		JE SHORT _007D0542
-		CMP EAX, 5h
-		JE SHORT _007D0542
-		CMP EAX, 6h
-		JE SHORT _007D0542
-		CMP EAX, 7h
-		JE SHORT _007D0542
-		// 8??  i add
-		CMP EAX, 8h
-		JE SHORT _007D0542
-		MOV ECX, _4DCA_PTRECX
-		MOV EAX, _4DCA_PTREAX
-
-		PUSH ECX
-		MOV ECX, DWORD PTR SS : [EBP]
-		PUSH 3h
-		JMP[_004DCA46]
-		_007D0542 :
-		MOV BYTE PTR DS : [ECX] , 20h
-		MOV ECX, _4DCA_PTRECX
-		MOV EAX, _4DCA_PTREAX
-		NOP
-		PUSH ECX
-		MOV ECX, DWORD PTR SS : [EBP]
-		PUSH 3h
-		JMP[_004DCA46]
+		MOV ECX, DWORD PTR DS : [664524h]
+		MOV flagCreated, 1h
+		JMP _005B5FFB
 	}
 }
-
-DWORD _004DCAC5_PTREAX;
-DWORD _004DCAC5_PTRECX;
-DWORD _004DCAC5_PTREDX;
-DWORD _004DCAC5_PTREBX;
-DWORD _004DCAC5_PTRESP;
-DWORD _004DCAC5_PTREBP;
-DWORD _004DCAC5_PTRESI;
-DWORD _004DCAC5_PTREDI;
-DWORD _004DCACA;
-//004DCAC5   .-E9 54372F00    JMP Empires2.007D021E
-
-void __declspec(naked)  playerChatColor004DCAC5()
+//0x053D5AB
+DWORD _00422A80 = 0x0422A80;
+DWORD _0053D5B0 = 0x053D5B0;
+void __declspec(naked)  chatColor053D5AB()
 {
 	__asm {
-
-		MOV _004DCAC5_PTREAX, EAX
-		MOV _004DCAC5_PTRECX, ECX
-		MOV _004DCAC5_PTREDX, EDX
-		MOV _004DCAC5_PTREBX, EBX
-		MOV _004DCAC5_PTRESP, ESP
-		MOV _004DCAC5_PTREBP, EBP
-		MOV _004DCAC5_PTRESI, ESI
-		MOV _004DCAC5_PTREDI, EDI
-		MOVZX EAX, BYTE PTR DS : [ECX]
-		MOV EDX, DWORD PTR DS : [6645C4h]
-		MOV ECX, DWORD PTR DS : [EDX + 0x41C]
-		MOV EDX, DWORD PTR DS : [ECX + 0x4C]
-		CMP EAX, 1h
-		JE  _007D0293
-		CMP EAX, 2h
-		JE  _007D0293
-		CMP EAX, 3h
-		JE  _007D0293
-		CMP EAX, 4h
-		JE  _007D0293
-		CMP EAX, 5h
-		JE  _007D0293
-		CMP EAX, 6h
-		JE  _007D0293
-		CMP EAX, 7h
-		JE  _007D0293
-		CMP EAX, 8h
-		JE  _007D0293
-		JMP _007D02DE
-
-		_007D0293 :
-		MOV EAX, DWORD PTR DS : [EDX + EAX * 4]
-			MOV ECX, DWORD PTR DS : [EAX + 158h]
-			MOV EAX, DWORD PTR DS : [ECX + 10h]
-			MOV ECX, _004DCAC5_PTRECX
-			MOV EDX, _004DCAC5_PTREDX
-			MOV EBX, _004DCAC5_PTREBX
-			MOV ESP, _004DCAC5_PTRESP
-			MOV EBP, _004DCAC5_PTREBP
-			MOV ESI, _004DCAC5_PTRESI
-			MOV EDI, _004DCAC5_PTREDI
-			CMP EAX, 0F2h
-			JE _007D031C
-			_007D02D0 :
-		PUSH EAX
-			MOV EAX, _004DCAC5_PTREAX
-			JMP[_004DCACA]
-
-			_007D02DE :
-			MOV ECX, _004DCAC5_PTRECX
-			MOV EDX, _004DCAC5_PTREDX
-			MOV EBX, _004DCAC5_PTREBX
-			MOV ESP, _004DCAC5_PTRESP
-			MOV EBP, _004DCAC5_PTREBP
-			MOV ESI, _004DCAC5_PTRESI
-			MOV EDI, _004DCAC5_PTREDI
-			PUSH 0FFh
-			MOV EAX, _004DCAC5_PTREAX
-			JMP[_004DCACA]
-
-			_007D031C:
-		MOV EAX, 15h
-			JMP[_007D02D0]
-	}
-}
-
-//004DCAC5   .-E9 54372F00    JMP Empires2.007D021E
-
-//004DCACA   . - E9 91392F00    JMP Empires2.007D0460
-DWORD _004DCACA_PTRECX;
-DWORD _004DCACA_PTREAX;
-DWORD _004DCAD2;
-void __declspec(naked)  playerChatColor004DCACA()
-{
-	__asm {
-
-		MOV _004DCACA_PTRECX, ECX
-		MOV _004DCACA_PTREAX, EAX
-		MOVZX EAX, BYTE PTR DS : [ECX]
-		CMP EAX, 1h
-		JE  _007D04B2
-		CMP EAX, 2
-		JE  _007D04B2
-		CMP EAX, 3h
-		JE  _007D04B2
-		CMP EAX, 4h
-		JE  _007D04B2
-		CMP EAX, 5h
-		JE  _007D04B2
-		CMP EAX, 6h
-		JE  _007D04B2
-		CMP EAX, 7h
-		JE  _007D04B2
-		CMP EAX, 8h
-		JE  _007D04B2
-		MOV ECX, _004DCACA_PTRECX
-		MOV EAX, _004DCACA_PTREAX
-		PUSH ECX
-		MOV ECX, DWORD PTR DS : [EBX + EDX * 4 + 1178h]
-		JMP[_004DCAD2]
-		_007D04B2 :
-		MOV BYTE PTR DS : [ECX] , 20h
-		MOV ECX, _004DCACA_PTRECX
-		MOV EAX, _004DCACA_PTREAX
-		PUSH ECX
-		MOV ECX, DWORD PTR DS : [EBX + EDX * 4 + 1178h]
-		NOP
-		JMP[_004DCAD2]
+		CALL _00422A80; \empires2.00422A80
+		MOV flagCreated, 1h
+		JMP _0053D5B0 
 	}
 }
 
 
-DWORD _00E0857_PTREAX;
-DWORD _004E085E;
-void __declspec(naked)  playerPositionsr00E0857()
-{
-	__asm {
-
-		MOV _00E0857_PTREAX, EAX
-		MOVZX EAX, BYTE PTR DS : [EAX]
-		CMP EAX, 1h
-		JE  _007D0834
-		CMP EAX, 2h
-		JE  _007D0834
-		CMP EAX, 3h
-		JE  _007D0834
-		CMP EAX, 4h
-		JE  _007D0834
-		CMP EAX, 5h
-		JE  _007D0834
-		CMP EAX, 6h
-		JE  _007D0834
-		CMP EAX, 7h
-		JE  _007D0834
-		CMP EAX, 8h
-		JE  _007D0834
-
-		MOV EAX, _00E0857_PTREAX
-		LEA ECX, DWORD PTR SS : [ESP + 15Ch]
-		JMP[_004E085E]
-		_007D0834 :
-		MOV EAX, _00E0857_PTREAX
-		LEA ECX, DWORD PTR SS : [ESP + 15Bh]
-		JMP[_004E085E]
-
-	}
-}
-
-#pragma endregion Chat color
-
-
-void  chatColor()
-{
-	DWORD hockAdress = 0x042DB74;
-	//int hookLength = 9;
-	JmbackAddressplayerPositions = 0x42DB7D;// hockAdress + hookLength;
-	//0x2BF700
-	setHook((void*)0x042DB74, playerPositions);
-
-	//0x2BF343
-	_004DCA40 = 0x04DCA40;
-	setHook((void*)0x4DCA3B, playerChatColor);
-	_004DCA46 = 0x04DCA46;
-	//004DCA40   .-E9 943A2F00    JMP Empires2.007D04D9
-	setHook((void*)0x04DCA40, playerChatColor004DCA40);
-	//0x4DCA3B
-	_004DCACA = 0x04DCACA;
-	setHook((void*)0x4DCAC5, playerChatColor004DCAC5);
-	//004DCA40   .-E9 943A2F00    JMP Empires2.007D04D9
-	_004DCAD2 = 0x04DCAD2;
-	setHook((void*)0x04DCACA, playerChatColor004DCACA);
-	//004E0857   .-E9 94FF2E00    JMP Empires2.007D07F0
-	_004E085E = 0x04E085E;
-	setHook((void*)0x4E0857, playerPositionsr00E0857);
-}
 //players structs MOV ECX,DWORD PTR DS:[6645C4]
 //0041F840  /$ 8B81 1C040000           MOV EAX,DWORD PTR DS:[ECX+41C]
 //004DC860 / $ 81EC 08010000             SUB ESP, 108
 //fuction called when user or game user console
-DWORD _004DCA13 = 0x04DCA13;
+
 
 DWORD c_EAX;
 DWORD c_ECX;
@@ -408,14 +164,23 @@ DWORD c_ESI;
 DWORD c_EDI;
 
 DWORD _0041F840 = 0x041F840;
-//004DCA0D  |. 8D5424 18      |LEA EDX,DWORD PTR SS:[ESP+18]
+DWORD* nameAdr;
+char* name;
+DWORD _004DCACA = 0x04DCACA ;
 
 
-void __declspec(naked)  chatColor004DC860()
+//004DCAC1 | . 8D4C24 34      LEA ECX, DWORD PTR SS : [ESP + 34] ; |
+//004DCAC5     68 F1000000    PUSH 0F1
+
+DWORD basePlayersAdress;
+BYTE color;
+
+
+void __declspec(naked)  chatColor004DCAC1()
 {
 	__asm {
-		LEA EDX, DWORD PTR SS : [ESP + 18h]
-		REPNE SCAS BYTE PTR ES : [EDI]
+
+
 		//save register
 		MOV c_EAX, EAX
 		MOV c_ECX, ECX
@@ -425,17 +190,23 @@ void __declspec(naked)  chatColor004DC860()
 		MOV c_EBP, EBP
 		MOV c_ESI, ESI
 		MOV c_EDI, EDI
-
+ 
+		
+		CMP flagCreated, 1h
+		JE white
 
 		MOV EDX, DWORD PTR DS : [6645C4h]
 		MOV ECX, DWORD PTR DS : [EDX + 41Ch]
 		MOV EDX, DWORD PTR DS : [ECX + 4Ch]
+		MOV EAX, player_position
+		MOV ECX, DWORD PTR DS : [EDX + 4 * EAX]
 
-
-		//pointer of players struct
-		MOV ECX, DWORD PTR DS : [6645C4h]
-		call _0041F840
-
+		ADD ECX, 158h
+		MOV ECX, DWORD PTR DS : [ECX]
+		ADD ECX, 10h
+		MOV EAX, 0h
+		MOV al, BYTE PTR DS : [ECX]
+		MOV color, al
 		//restaure register
 		MOV  EAX, c_EAX
 		MOV  ECX, c_ECX
@@ -445,16 +216,139 @@ void __declspec(naked)  chatColor004DC860()
 		MOV  EBP, c_EBP
 		MOV  ESI, c_ESI
 		MOV  EDI, c_EDI
-		JMP _004DCA13 
+		REP MOVS BYTE PTR ES : [EDI] , BYTE PTR DS : [ESI]
+		MOV EAX, 0h
+		MOV  EAX, player_position
+		MOV BYTE PTR DS : [ESI] , AL
+		MOV  EAX, c_EAX
+		PUSH 0h
+		PUSH 0h
+
+
+		LEA ECX, DWORD PTR SS : [ESP + 34h]
+		CMP color, 0F2h
+		JNZ  standartColor
+		MOV color,15h
+		standartColor:
+		push color
+		JMP _004DCACA
+		white:
+ 
+		//restaure register
+		MOV  EAX, c_EAX
+		MOV  ECX, c_ECX
+		MOV  EDX, c_EDX
+		MOV  EBX, c_EBX
+		MOV  ESP, c_ESP
+		MOV  EBP, c_EBP
+		MOV  ESI, c_ESI
+		MOV  EDI, c_EDI
+		REP MOVS BYTE PTR ES : [EDI] , BYTE PTR DS : [ESI]
+		PUSH 0h
+		PUSH 0h
+
+
+		LEA ECX, DWORD PTR SS : [ESP + 34h]
+		push 0FFh
+		MOV flagCreated,0h
+		JMP _004DCACA
 
 
 	}
 }
+
+//0044DFD7     90             NOP                                                  ; |Arg10
+//0044DD72  |. 0F84 38050000  |JE empires2.0044E2B0
+
+//0044DE42  |> 8B4424 10      |MOV EAX,DWORD PTR SS:[ESP+10]
+//0040B55E > -E9 104C3A00    JMP age2_x1_.007B0173
+
+
+
+//005E4D08  |> 8B0D C4456600  |MOV ECX,DWORD PTR DS:[6645C4]
+DWORD _004217B0 = 0x04217B0;
+DWORD _0042E360 = 0x042E360;
+DWORD _00422220 = 0x0422220;
+DWORD _005E4D3E = 0x05E4D3E;
+DWORD _005E4D4F = 0x05E4D4F;
+void __declspec(naked)  PannelColor005E4D08()
+{
+	__asm {
+		//MOV ECX, DWORD PTR DS : [7912A0]
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		MOV BYTE PTR SS : [ESP + EAX + 34h] , 0h
+		//CALL age2_x1_.005EAE80
+		CALL _004217B0
+		TEST EAX, EAX
+		JNZ short _007B0190
+		MOV EAX, DWORD PTR SS : [ESP + 10h]
+		CMP EAX, 4h
+		JL short _007B01A1
+		_007B0190:
+		LEA EDX, DWORD PTR SS : [ESP + 34h]
+		//MOV ECX, DWORD PTR DS : [791200]
+		MOV ECX, DWORD PTR DS : [664520]
+		PUSH EDX
+		PUSH EBX
+		//CALL age2_x1_.005DA430
+		CALL _0042E360
+		_007B01A1:
+		MOV ECX, DWORD PTR SS : [ESP + 30h]
+		PUSH ECX
+		//MOV ECX, DWORD PTR DS : [7912A0]
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		PUSH EBX
+		//CALL age2_x1_.005EB8F0
+		CALL _00422220
+		//MOV ECX, DWORD PTR DS : [7912A0]
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		//CALL age2_x1_.005EAE80
+		CALL _004217B0
+		TEST EAX, EAX
+		JNZ _0040B594
+		JMP _005E4D4F
+
+		_0040B594:
+		JMP _005E4D3E 
+	}
+}
+//005B4911   .-E9 E2B71F00    JMP age2_x1_.007B00F8
+//004FF1E4     EB 26          JMP SHORT age2_x1.004FF20C
+
+
 
 
 
 
 void chatchatColorFixe()
 {
-	setHook((void*)0x04DCA0D,chatColor004DC860);
+	//direct message color
+	setHook((void*)0x04DCABB , chatColor004DCAC1);
+	// 004DCA37
+	setHook((void*)0x04DCA37, chatColor004DCA37);
+	// set -- white
+	setHook((void*)0x05B5FF5, chatColor005B5FF5);
+	// --shepp found
+	setHook((void*)0x053D5AB , chatColor053D5AB);
+	//player position
+	setHook((void*)0x0422A80, getplayerPositionn);
+	////set pannnel color
+	//setHook((void*)0x05E4D08, PannelColor005E4D08);
 }
+
+ //message writed on list 
+//00422BCB | . 8BFE           MOV EDI, ESI
+//00422BCD | . 83C9 FF        OR ECX, FFFFFFFF
+//
+
+
+
+//when hosting room
+//player position ?
+//0042A860  |. 8B8424 2801000>MOV EAX,DWORD PTR SS:[ESP+128]
+//
+//15F80020
+//15F80178  58 B3 6A 02              X³j
+//
+//0042A860 | . 8B8424 28010000     MOV EAX, DWORD PTR SS : [ESP + 128]
+//
